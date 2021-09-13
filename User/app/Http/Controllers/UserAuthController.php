@@ -31,11 +31,11 @@ class UserAuthController extends Controller
 
         $rules = [
             'name' => 'required',
-            'company_id' => 'required|exists:companies',
             'mobile' => 'required|valid_mobile',
+            'company_id' => 'required|exists:companies,id',
             'email' => 'email',
             'password' => 'required|min:6',
-            'status' => 'require'
+            'status' => 'required'
         ];
 
         $items = [
@@ -46,9 +46,12 @@ class UserAuthController extends Controller
             'status',
         ];
 
+        $this->validate($request, $rules);
+
         $data = $request->only($items);
         //admin can add seller
-        array_push($data, ['type' => 'seller', 'password' => Hash::make($request->password)]);
+        $data['type'] = 'seller';
+        $data['password'] = Hash::make($request->password);
 
         $user = User::create($data);
 
