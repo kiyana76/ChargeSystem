@@ -14,7 +14,7 @@ class CompanyController extends Controller
         $this->middleware('auth');
     }
     public function create(Request $request) {
-        $this->authorize('isAdmin', Auth::user());
+        $this->authorize('isAdmin', Auth::guard('user')->user());
 
         $rules = [
             'name' => 'required'
@@ -35,7 +35,7 @@ class CompanyController extends Controller
     }
 
     public function index() {
-        $this->authorize('isAdmin', Auth::user());
+        $this->authorize('isAdmin', Auth::guard('user')->user());
 
         $companies = Company::all();
 

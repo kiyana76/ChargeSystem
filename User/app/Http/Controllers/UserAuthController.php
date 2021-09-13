@@ -18,7 +18,7 @@ class UserAuthController extends Controller
 
         $data = $request->only(['mobile', 'password']);
 
-        if (!(($token = Auth::attempt($data)) && Auth::user()->status == 'active')) {
+        if (!(($token = Auth::guard('user')->attempt($data)) && Auth::user()->status == 'active')) {
             return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
         }
 
@@ -27,11 +27,11 @@ class UserAuthController extends Controller
 
     public function registerSeller(Request $request)
     {
-        $this->authorize('isAdmin', Auth::user());
+        $this->authorize('isAdmin', Auth::guard('user')->user());
 
         $rules = [
             'name' => 'required',
-            'mobile' => 'required|valid_mobile',
+            'mobile' => 'required|valid_mobile|unique:users,mobile',
             'company_id' => 'required|exists:companies,id',
             'email' => 'email',
             'password' => 'required|min:6',
