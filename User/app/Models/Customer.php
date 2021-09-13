@@ -10,23 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class Customer extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use HasFactory, Authenticatable, Authorizable;
 
 
     protected $fillable = [
-        'name', 'email', 'type', 'company_id', 'mobile', 'password', 'status'
+        'mobile', 'status', 'password'
     ];
-
 
     protected $hidden = [
         'password',
     ];
 
-    protected $guard = 'user';
-    protected $guard_name = 'user';
-
+    protected $guard = 'customer';
+    protected $guard_name = 'customer';
 
     public function getJWTIdentifier()
     {
