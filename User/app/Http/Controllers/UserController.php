@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 class UserController extends Controller
 {
     public function show($id) {
-        $user = User::whereId($id)->first();
+        $user = User::where('id', $id)->first();
 
         if (!$user)
             return response()->json(['message' => 'user not found!', 'body' => [], 'error' => true], 404);
