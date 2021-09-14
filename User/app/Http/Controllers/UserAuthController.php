@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserAuthController extends Controller
 {
@@ -25,7 +26,7 @@ class UserAuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function registerSeller(Request $request)
+    public function registerUser(Request $request)
     {
         $this->authorize('isAdmin', Auth::guard('user')->user());
 
@@ -35,7 +36,8 @@ class UserAuthController extends Controller
             'company_id' => 'required|exists:companies,id',
             'email' => 'email',
             'password' => 'required|min:6',
-            'status' => 'required'
+            'status' => 'required',
+            'type' => ['required', Rule::in(['admin', 'seller'])]
         ];
 
         $items = [
@@ -44,13 +46,12 @@ class UserAuthController extends Controller
             'mobile',
             'email',
             'status',
+            'type'
         ];
 
         $this->validate($request, $rules);
 
         $data = $request->only($items);
-        //admin can add seller
-        $data['type'] = 'seller';
         $data['password'] = Hash::make($request->password);
 
         $user = User::create($data);
