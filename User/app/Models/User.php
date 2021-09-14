@@ -37,4 +37,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
+
+    public function company() {
+        return $this->belongsTo(Company::class);
+    }
 }

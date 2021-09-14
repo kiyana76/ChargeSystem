@@ -11,3 +11,8 @@ $router->post('companies', 'CompanyController@create');
 $router->get('companies', 'CompanyController@index');
 
 $router->post('customer/login', 'CustomerController@login');
+
+$router->post('credit', 'CreditController@create');
+$router->put('credit/{id}', 'CreditController@update');
+$router->get('get-credit', 'CreditController@getCredit');
+$router->get('credit/log', 'CreditController@log');

@@ -18,7 +18,6 @@ class Customer
             return false;
         }
 
-        print_r($token);die();
         return $token;
     }
 
