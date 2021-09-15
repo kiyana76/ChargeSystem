@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class Customer
 {
-    private CustomerRepositoryInterface $customerRepository;
+    private  $customerRepository;
     public function __construct(CustomerRepositoryInterface $customerRepository)
     {
         $this->customerRepository = $customerRepository;

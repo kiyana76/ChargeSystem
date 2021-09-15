@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
@@ -69,5 +70,13 @@ class UserTest extends TestCase
 
         $response->assertResponseStatus(404);
         $response->seeJson(['message' => 'user not found!', 'body' => [], 'error' => true]);
+    }
+
+    public function test_customer_login() {
+        $response = $this->post('/customer/login', ['mobile' => '09302828629', 'password' => '123456']);
+
+        $response->assertResponseStatus(200);
+        $response->seeJson(['token' => $response->response['token'], 'token_type' => 'bearer']);
+        $this->assertTrue(auth()->guard('customer')->check());
     }
 }

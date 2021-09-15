@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    private CustomerRepositoryInterface $customerRepository;
+    private  $customerRepository;
     public function __construct(CustomerRepositoryInterface $customerRepository)
     {
         $this->customerRepository = $customerRepository;
