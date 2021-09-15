@@ -4,34 +4,29 @@ namespace App\Classes;
 
 use App\Models\CreditLogs;
 use App\Models\User;
+use App\Repository\CreditRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 
 class Credit
 {
-    private $userRepository;
-    public function __construct(UserRepositoryInterface $userRepository)
+    private UserRepositoryInterface $userRepository;
+    private $creditRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository, CreditRepositoryInterface $creditRepository)
     {
         $this->userRepository = $userRepository;
+        $this->creditRepository = $creditRepository;
     }
 
     public function create($data) {
-        $credit_log = new CreditLogs();
-        $credit_log->user_id = $data['user_id'];
-        $credit_log->amount = $data['amount'];
-        $credit_log->type = $data['type'];
-        $credit_log->admin_id = $data['admin_id'] ?? null;
-        $credit_log->save();
-
-        return $credit_log;
+        return $this->creditRepository->create($data);
     }
 
     public function getCredit(array $data)
     {
         $user_id = $data['user_id'];
         $company_id = $this->userRepository->findById($user_id)->company_id;
-        $logs = CreditLogs::whereHas('user.company', function ($q) use ($company_id) {
-            $q->where('id', $company_id);
-        })->get();
+        $logs = $this->creditRepository->index(['company_id' => $company_id]);
 
         $credit = 0;
         foreach ($logs as $log) {
@@ -51,25 +46,11 @@ class Credit
 
     public function update(array $data)
     {
-        $credit_log = CreditLogs::where('id', $data['credit_log_id'])->where('type', 'lock')->first();
-        $credit_log->update($data);
-        $credit_log->refresh();
-
-        return $credit_log;
+        return $this->creditRepository->update($data['credit_log_id'], $data, ['type'=> 'lock']);
     }
 
     public function log(array $data)
     {
-        $credit = new CreditLogs();
-
-        if (isset($data['company_id']) && $data['company_id'] != '')
-            $credit = $credit->whereHas('user.company', function ($q) use ($data) {
-                $q->where('id', $data['company_id']);
-            });
-
-        if (isset($data['seller_id']) && $data['seller_id'] != '')
-            $credit = $credit->where('user_id', $data['seller_id']);
-
-        return $credit->get();
+        return $this->creditRepository->index($data);
     }
 }
