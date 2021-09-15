@@ -17,7 +17,7 @@ class CustomerEloquentRepository implements CustomerRepositoryInterface
 
     public function find(array $columns = ["*"], $conditions = [],  $relations = []): ?Model
     {
-        return Customer::select($columns)->where($conditions)->first();
+        return Customer::select($columns)->with($relations)->where($conditions)->first();
 
     }
 }
