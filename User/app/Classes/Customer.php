@@ -1,12 +1,18 @@
 <?php
 namespace App\Classes;
 
+use App\Repository\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\Customer AS CustomerModel;
 use Illuminate\Support\Facades\Hash;
 
 class Customer
 {
+    private CustomerRepositoryInterface $customerRepository;
+    public function __construct(CustomerRepositoryInterface $customerRepository)
+    {
+        $this->customerRepository = $customerRepository;
+    }
 
     public function login($credentials_data)
     {
@@ -22,7 +28,7 @@ class Customer
     }
 
     private function checkMobileExists($mobile):bool {
-        $mobile_exists = CustomerModel::whereMobile($mobile)->first();
+        $mobile_exists = $this->customerRepository->find(['*'], ['mobile' => $mobile]);
         return $mobile_exists != null;
     }
 
@@ -30,6 +36,6 @@ class Customer
     {
         $credentials_data['status'] = 'active';
         $credentials_data['password'] = Hash::make($credentials_data['password']);
-        $customer = CustomerModel::create($credentials_data);
+        $this->customerRepository->create($credentials_data);
     }
 }
