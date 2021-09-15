@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repository\CompanyRepositoryInterface;
 use App\Repository\CustomerRepositoryInterface;
+use App\Repository\Eloquent\CompanyEloquentRepository;
 use App\Repository\Eloquent\CreditEloquentRepository;
 use App\Repository\CreditRepositoryInterface;
 use App\Repository\Eloquent\CustomerEloquentRepository;
@@ -22,6 +24,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserEloquentRepository::class);
         $this->app->bind(CreditRepositoryInterface::class, CreditEloquentRepository::class);
         $this->app->bind(CustomerRepositoryInterface::class, CustomerEloquentRepository::class);
+        $this->app->bind(CompanyRepositoryInterface::class, CompanyEloquentRepository::class);
     }
 
     /**

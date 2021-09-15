@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Repository\CompanyRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class CompanyController extends Controller
 {
-    public function __construct()
+    private $companyRepository;
+    public function __construct(CompanyRepositoryInterface $companyRepository)
     {
         $this->middleware('auth');
+        $this->companyRepository = $companyRepository;
     }
     public function create(Request $request) {
         $this->authorize('isAdmin', Auth::guard('user')->user());
@@ -26,7 +29,7 @@ class CompanyController extends Controller
 
         $data = $request->only($item);
 
-        $company = Company::create($data);
+        $company = $this->companyRepository->create($data);
 
         if ($company)
             return response()->json(['message' => 'company created successfully!', 'body' => [$company], 'error' => false], 201);
@@ -37,7 +40,7 @@ class CompanyController extends Controller
     public function index() {
         $this->authorize('isAdmin', Auth::guard('user')->user());
 
-        $companies = Company::all();
+        $companies = $this->companyRepository->index();
 
         return response()->json(['message' => 'all data retrieved!', 'body' => [$companies], 'error' => false], 200);
     }
