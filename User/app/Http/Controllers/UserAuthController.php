@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +11,12 @@ use Illuminate\Validation\Rule;
 
 class UserAuthController extends Controller
 {
+    private $userRepository;
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [
@@ -54,7 +61,7 @@ class UserAuthController extends Controller
         $data = $request->only($items);
         $data['password'] = Hash::make($request->password);
 
-        $user = User::create($data);
+        $user = $this->userRepository->create($data);
 
         if ($user)
             return response()->json(['message' => 'user created successfully!', 'body' => [$user], 'error' => false], 201);

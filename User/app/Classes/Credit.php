@@ -4,9 +4,16 @@ namespace App\Classes;
 
 use App\Models\CreditLogs;
 use App\Models\User;
+use App\Repository\UserRepositoryInterface;
 
 class Credit
 {
+    private $userRepository;
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function create($data) {
         $credit_log = new CreditLogs();
         $credit_log->user_id = $data['user_id'];
@@ -21,7 +28,7 @@ class Credit
     public function getCredit(array $data)
     {
         $user_id = $data['user_id'];
-        $company_id = User::where('id', $user_id)->first()->company_id;
+        $company_id = $this->userRepository->findById($user_id)->company_id;
         $logs = CreditLogs::whereHas('user.company', function ($q) use ($company_id) {
             $q->where('id', $company_id);
         })->get();
