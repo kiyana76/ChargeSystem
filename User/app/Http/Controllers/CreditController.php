@@ -66,7 +66,7 @@ class CreditController extends Controller
         $credit_class = new Credit($this->userRepository, $this->creditRepository);
         $result = $credit_class->log($data);
 
-        return response()->json(['message' => 'credit retrieved!', 'body' => ['credit' => $result], 'error' => false], 200);
+        return response()->json(['message' => 'credit retrieved!', 'body' => $result, 'error' => false], 200);
     }
 
     public function getCredit(Request $request) {

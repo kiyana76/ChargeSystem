@@ -26,7 +26,7 @@ class UserAuthController extends Controller
 
         $data = $request->only(['mobile', 'password']);
 
-        if (!(($token = Auth::guard('user')->attempt($data)) && Auth::user()->status == 'active')) {
+        if (!(($token = Auth::guard('user')->attempt($data)) && Auth::guard('user')->user()->status == 'active')) {
             return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
         }
 
