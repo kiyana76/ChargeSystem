@@ -1,0 +1,28 @@
+version: '3.5'
+services:
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 'php -S 0.0.0.0:8001 -t public'
+    volumes:
+          - .:/app
+    ports:
+      - 8001:8001
+    depends_on:
+      - api_gateway_db
+
+  api_gateway_db:
+    image: mysql:5.7.22
+    container_name: api_gateway_db
+    restart: on-failure
+    tty: true
+    environment:
+      MYSQL_DATABASE: api_gateway
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - "33063:3306"
