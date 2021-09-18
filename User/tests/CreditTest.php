@@ -111,4 +111,26 @@ class CreditTest extends TestCase
 
 
     }
+
+    public function test_get_credit_list() {
+        $company = Company::factory()->count(1)->create()->toArray();
+        $seller = User::factory()->count(2)->create(['type' => 'seller', 'company_id' => $company[0]['id']])->toArray();
+
+//        $response = $this->get('/credit/log');
+//        $response->seeStatusCode(200);
+//        $response->seeJson(['message' => 'credit retrieved!', 'body' => $response->response['body'], 'error' => false]);
+
+        $response = $this->get('/credit/log?seller_id=' . $seller[0]['id']);
+        $response->seeStatusCode(200);
+        $response->seeJson(['message' => 'credit retrieved!', 'body' => $response->response['body'], 'error' => false]);
+
+        $credit_log_not_for_this_seller = false;
+        foreach ($response->response['body'] as $credit_log) {
+            if ($credit_log['user_id'] != $seller[0]['id']) {
+                $credit_log_not_for_this_seller = true;
+                break;
+            }
+        }
+        $this->assertFalse($credit_log_not_for_this_seller);
+    }
 }

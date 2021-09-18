@@ -30,7 +30,7 @@ class CreditEloquentRepository implements CreditRepositoryInterface
 
     public function index(array $conditions = []): ?Collection
     {
-        $model = new CreditLogs();
+        $model = CreditLogs::select(["*"]);
 
         if (isset($conditions['company_id']) && $conditions['company_id'] != null)
             $model->whereHas('user.company', function ($q) use ($conditions) {
