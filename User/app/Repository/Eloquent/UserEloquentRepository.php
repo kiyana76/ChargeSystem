@@ -7,9 +7,9 @@ use App\Repository\UserRepositoryInterface;
 class UserEloquentRepository implements UserRepositoryInterface
 {
 
-    public function findById(int $modelId, array $columns = ["*"], $relations = [], $appends = []): ?\Illuminate\Database\Eloquent\Model
+    public function findById(int $modelId, array $columns = ["*"], $relations = []): ?\Illuminate\Database\Eloquent\Model
     {
-        return User::select($columns)->with($relations)->findOrFail($modelId)->append($appends);
+        return User::select($columns)->with($relations)->find($modelId);
     }
 
     public function create(array $payload): ?\Illuminate\Database\Eloquent\Model

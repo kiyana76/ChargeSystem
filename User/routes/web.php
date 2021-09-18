@@ -16,3 +16,6 @@ $router->post('credit', 'CreditController@create');
 $router->put('credit', 'CreditController@update');
 $router->get('get-credit', 'CreditController@getCredit');
 $router->get('credit/log', 'CreditController@log');
+$router->get('/', function () use ($router) {
+    return $router->app->version();
+});

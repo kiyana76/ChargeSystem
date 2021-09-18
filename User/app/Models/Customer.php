@@ -23,6 +23,8 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
         'password',
     ];
 
+    protected $table = 'customers';
+
     protected $guard = 'customer';
     protected $guard_name = 'customer';
 
