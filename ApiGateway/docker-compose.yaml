@@ -11,6 +11,8 @@ services:
       - 8001:8001
     depends_on:
       - api_gateway_db
+    networks:
+      - app-network
 
   api_gateway_db:
     image: mysql:5.7.22
@@ -26,3 +28,11 @@ services:
       - ./storage/dbdata:/var/lib/mysql
     ports:
       - "33063:3306"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+    external: true

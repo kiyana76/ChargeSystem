@@ -11,6 +11,8 @@ services:
       - 8000:8000
     depends_on:
       - user_db
+    networks:
+      - app-network
 
   user_db:
     image: mysql:5.7.22
@@ -26,3 +28,10 @@ services:
       - ./storage/dbdata:/var/lib/mysql
     ports:
       - "33062:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+    external: true
