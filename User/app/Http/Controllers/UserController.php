@@ -24,4 +24,10 @@ class UserController extends Controller
             return response()->json(['message' => 'user not found!', 'body' => [], 'error' => true], 404);
         return response()->json(['message' => 'user founded!', 'body' => [$user], 'error' => false], 200);
     }
+
+    public function get(Request $request) {
+        if (Auth::guard('user')->check())
+            return response()->json(['message' => 'Authenticated', 'body' => Auth::guard('user')->user(), 'error' => false],200);
+        return response()->json(['message' => 'UnAuthorized', 'body' => [], 'error' => true], 401);
+    }
 }
