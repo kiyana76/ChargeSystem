@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+  charge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 'php -S 0.0.0.0:8003 -t public'
+    volumes:
+          - .:/app
+    ports:
+      - 8003:8003
+    depends_on:
+      - charge_db
+    networks:
+      - app-network
+
+  charge_db:
+    image: mysql:5.7.22
+    container_name: charge_db
+    restart: on-failure
+    tty: true
+    environment:
+      MYSQL_DATABASE: charge
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - "33065:3306"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+    external: true
