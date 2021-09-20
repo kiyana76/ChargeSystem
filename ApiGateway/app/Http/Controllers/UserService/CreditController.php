@@ -47,4 +47,32 @@ class CreditController extends Controller
         }
         return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
     }
+
+    public function show(Request $request) {
+        $auth_class = new Auth();
+        $token = $request->header('authorization') ?? '';
+        $user = $auth_class->getUser($token);
+
+        if ($user && $user['type'] == 'admin') {
+            $this->validate($request, ['user_id' => 'required']);
+
+            $response = Http::withHeaders([
+                'Authorization' => $token
+            ])->get(config('api_gateway.user_service_url') . 'get-credit?user_id=' . $request->user_id);
+            return response()->json(json_decode($response->getBody()->getContents()));
+        }
+
+        elseif ($user && $user['type'] == 'seller') { // seller just can see log itself
+            $data = $request->all();
+            $data['company_id'] = $user['company_id'];
+            $response = Http::withHeaders([
+                'Authorization' => $token
+            ])->get(config('api_gateway.user_service_url') . 'get-credit?user_id=' . $user['id']);
+            return response()->json(json_decode($response->getBody()->getContents()));
+        }
+
+
+        return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
+
+    }
 }
