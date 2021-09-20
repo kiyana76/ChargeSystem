@@ -21,6 +21,8 @@ $router->get('companies', 'UserService\CompanyController@index');
 $router->get('credit/log', 'UserService\CreditController@log');
 $router->post('credit', 'UserService\CreditController@create');
 
+$router->get('get-credit', 'UserService\CreditController@show');
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
