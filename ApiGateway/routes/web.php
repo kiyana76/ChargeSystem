@@ -18,7 +18,8 @@ $router->post('register/user', 'UserService\AuthController@register');
 $router->post('companies', 'UserService\CompanyController@create');
 $router->get('companies', 'UserService\CompanyController@index');
 
-
+$router->get('credit/log', 'UserService\CreditController@log');
+$router->post('credit', 'UserService\CreditController@create');
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
