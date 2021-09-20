@@ -15,6 +15,11 @@
 $router->post('login', 'UserService\AuthController@login');
 $router->post('register/user', 'UserService\AuthController@register');
 
+$router->post('companies', 'UserService\CompanyController@create');
+$router->get('companies', 'UserService\CompanyController@index');
+
+
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });

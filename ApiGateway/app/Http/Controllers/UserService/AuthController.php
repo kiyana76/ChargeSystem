@@ -23,12 +23,13 @@ class AuthController extends Controller
         $token = $request->header('authorization') ?? '';
         $user = $auth_class->getUser($token);
 
-        if ($user)
+        if ($user && $user['type'] == 'admin') {
             $response = Http::withHeaders([
                 'Authorization' => $token
-            ]) ->post(config('api_gateway.user_service_url') . 'register/user', $request->all());
-
-        return response()->json(json_decode($response->getBody()->getContents()));
+            ])->post(config('api_gateway.user_service_url') . 'register/user', $request->all());
+            return response()->json(json_decode($response->getBody()->getContents()));
+        }
+        return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
     }
 
 }
