@@ -14,3 +14,4 @@
 */
 
 $router->get('charge-categories', 'ChargeCategoryController@index');
+$router->post('charge/demand', 'ChargeController@demand');

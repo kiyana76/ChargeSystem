@@ -11,7 +11,6 @@ class UuIdV1 implements CreateChargeFactoryInterface
 
     public function getChargeCode()
     {
-
         return Uuid::v1();
     }
 }

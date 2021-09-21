@@ -14,4 +14,10 @@ class ChargeCategoryEloquentRepository implements ChargeCategoryRepositoryInterf
     {
         return ChargeCategory::select($columns)->where($conditions)->with($relations)->get();
     }
+
+
+    public function findById(int $modelId, array $columns = ["*"], $relations = []): ?Model
+    {
+        return ChargeCategory::select($columns)->with($relations)->find($modelId);
+    }
 }

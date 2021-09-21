@@ -15,12 +15,16 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
 
     public function create(array $payload): ?Model
     {
-        return Charge::create($payload);
+        try {
+            return Charge::create($payload)->fresh();
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
-    public function update(int $id, array $payload): bool
+    public function update(int $id, array $payload): ?Model
     {
         $model = $this->show(['*'], ['id' => $id]);
-        return $model->update($payload);
+        return $model->update($payload) ? $model->fresh() : null;
     }
 }

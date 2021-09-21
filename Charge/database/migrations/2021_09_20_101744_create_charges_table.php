@@ -21,7 +21,7 @@ class CreateChargesTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->uuid('code')->unique();
             $table->string('amount');
-            $table->dateTime('expire_date');
+            $table->dateTime('expire_date')->nullable();
             $table->enum('sold_status', ['sold', 'burnt', 'free']);
             $table->enum('status', ['valid', 'invalid', 'lock']);
             $table->timestamps();
