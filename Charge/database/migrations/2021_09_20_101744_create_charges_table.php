@@ -17,10 +17,11 @@ class CreateChargesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('charge_category_id');
             $table->foreign('charge_category_id')->on('charge_categories')->references('id')->onDelete('cascade');
-            $table->unsignedBigInteger('seller_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('company_id')->nullable();
             $table->uuid('code')->unique();
-            $table->dateTime('expire_date');
+            $table->string('amount');
+            $table->dateTime('expire_date')->nullable();
             $table->enum('sold_status', ['sold', 'burnt', 'free']);
             $table->enum('status', ['valid', 'invalid', 'lock']);
             $table->timestamps();
