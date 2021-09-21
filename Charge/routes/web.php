@@ -13,6 +13,5 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('charge-categories', 'ChargeCategoryController@index');
+$router->post('charge/demand', 'ChargeController@demand');
