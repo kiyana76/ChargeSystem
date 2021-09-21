@@ -33,19 +33,17 @@ class ChargeController extends Controller
         $data = $request->only($items);
         $demand_charge_class = new DemandCharge();
         switch ($request->user_type) {
+            case 'customer':
             case 'admin':
                 $result = $demand_charge_class->adminDemandCharge($data);
                 break;
             case 'seller':
                 $result = $demand_charge_class->sellerDemandCharge($data);
                 break;
-            case 'customer':
-                $result = $demand_charge_class->customerDemandCharge($data);
-                break;
         }
 
-        if ($result)
+        if (gettype($result) == 'array')
             return response()->json(['message' => 'charge created', 'body' => $result, 'error' => false], 200);
-        return response()->json(['message' => 'charge create failed', 'body' => [], 'error' => true], 400);
+        return response()->json(['message' => $result, 'body' => [], 'error' => true], 400);
     }
 }
