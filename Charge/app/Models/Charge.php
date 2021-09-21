@@ -12,7 +12,7 @@ class Charge extends Model
 
     protected $fillable = [
         'charge_category_id',
-        'seller_id',
+        'user_id',
         'company_id',
         'code',
         'expire_date',
