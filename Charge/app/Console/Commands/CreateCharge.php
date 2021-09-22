@@ -33,7 +33,7 @@ class CreateCharge extends Command
                 'sold_status' => 'free',
                 'status' => 'valid',
             ];
-            for ($i = 0; $i < config('charge.automatic_charge_produce_every_night'); $i++) {
+            for ($i = 0; $i < config('charge.automatic_charge_produce_count'); $i++) {
                 $charge_class->createCharge($data);
 
                 echo 'charge produced';

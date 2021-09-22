@@ -3,6 +3,7 @@ namespace App\Classes;
 
 use App\Classes\CreateCharge\CreateChargeFactoryInterface;
 use App\Classes\Traits\Credits;
+use App\Events\ChargeSoldEvent;
 use App\Repository\ChargeCategoryRepositoryInterface;
 use App\Repository\ChargeRepositoryInterface;
 use Illuminate\Support\Carbon;
@@ -35,6 +36,8 @@ class DemandCharge
         for ($i = 0; $i < $count; $i++) {
             $charge = $this->getValidFreeCharge($data['charge_category_id']);
             $charge = $this->chargeRepository->update($charge->id, $update_data);
+
+            event(new ChargeSoldEvent());
             if ($charge)
                 array_push($charges, $charge);
             else

@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquent;
 
 use App\Models\Charge;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterface
@@ -26,5 +27,10 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
     {
         $model = $this->show(['*'], ['id' => $id]);
         return $model->update($payload) ? $model->fresh() : null;
+    }
+
+    public function index(array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
+    {
+        return Charge::select($columns)->where($conditions)->with($relations)->get();
     }
 }
