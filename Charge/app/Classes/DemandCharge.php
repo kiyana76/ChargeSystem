@@ -105,7 +105,7 @@ class DemandCharge
         return $charge;
     }
 
-    private function createCharge(&$data) {
+    public function createCharge(&$data) {
         $get_code_class = App::make(CreateChargeFactoryInterface::class);
 
         //write do..while for get not unique code and produce again
