@@ -12,6 +12,5 @@ class CreateChargeTest extends TestCase
      */
     public function testExample()
     {
-        $charge = new \App\Classes\CreateCharge\UuIdV1();
     }
 }
