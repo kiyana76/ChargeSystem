@@ -36,4 +36,22 @@ class ChargeController extends Controller
         }
         return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
     }
+
+    public function index(Request $request) {
+        $auth_class = new Auth();
+        $token = $request->header('authorization') ?? '';
+        $user = $auth_class->getUser($token);
+
+        if ($user && $user['type'] == 'admin') {
+            $data = $request->all();
+            $response = Http::get(config('api_gateway.charge_service_url') . 'charge', $data);
+            return response()->json(json_decode($response->getBody()->getContents()));
+        } elseif ($user && $user['type'] == 'seller') {
+            $data = $request->all();
+            $data['company_id'] = $user['company_id'];
+            $response = Http::get(config('api_gateway.charge_service_url') . 'charge', $data);
+            return response()->json(json_decode($response->getBody()->getContents()));
+        }
+        return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
+    }
 }

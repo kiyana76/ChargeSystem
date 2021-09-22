@@ -3,6 +3,7 @@
 namespace App\Repository\Eloquent;
 
 use App\Models\Charge;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,6 +32,25 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
 
     public function index(array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
     {
-        return Charge::select($columns)->where($conditions)->with($relations)->get();
+        $charge_class = Charge::select($columns);
+
+        if (isset($conditions['expire_date_from']) && $conditions['expire_date_from'] != null) {
+            $date_from = Carbon::parse($conditions['expire_date_from'])->format('Y-m-d 00:00:00');
+            $charge_class = $charge_class->where('expire_date', '>=', $date_from);
+            unset($conditions['expire_date_from']);
+        }
+
+        if (isset($conditions['expire_date_to']) && $conditions['expire_date_to'] != null) {
+            $date_to = Carbon::parse($conditions['expire_date_to'])->format('Y-m-d 23:59:59');
+            $charge_class = $charge_class->where('expire_date', '<=', $date_to);
+            unset($conditions['expire_date_to']);
+        }
+
+        if (isset($conditions['created_at']) && $conditions['created_at'] != null) {
+            $charge_class = $charge_class->whereDate('created_at', $conditions['created_at']);
+            unset($conditions['created_at']);
+        }
+
+        return $charge_class->select($columns)->where($conditions)->with($relations)->get();
     }
 }

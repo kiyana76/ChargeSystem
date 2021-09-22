@@ -19,6 +19,7 @@ $router->get('get-credit', 'UserService\CreditController@show');
 /************************* Start ChargeService API**************/
 $router->get('charge-categories', 'ChargeService\ChargeController@chargeCategoryIndex');
 $router->post('charge/demand', 'ChargeService\ChargeController@chargeDemand');
+$router->get('charge', 'ChargeService\ChargeController@index');
 /************************* End ChargeService API**************/
 
 
