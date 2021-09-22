@@ -11,6 +11,13 @@ use Illuminate\Validation\Rule;
 
 class ChargeController extends Controller
 {
+    private ChargeRepositoryInterface $chargeRepository;
+
+    public function __construct(ChargeRepositoryInterface $chargeRepository)
+    {
+        $this->chargeRepository = $chargeRepository;
+    }
+
     public function demand(Request $request) {
         $rules = [
             'charge_category_id' => 'required|exists:charge_categories,id',
@@ -45,5 +52,15 @@ class ChargeController extends Controller
         if (gettype($result) == 'array')
             return response()->json(['message' => 'charge created', 'body' => $result, 'error' => false], 200);
         return response()->json(['message' => $result, 'body' => [], 'error' => true], 400);
+    }
+
+    public function index(Request $request) {
+        $filters = $request->all();
+        foreach ($filters as $key => $value) {
+            if ($value == '')
+                unset($filters[$key]);
+        }
+        $result = $this->chargeRepository->index(['*'], $filters);
+        return response()->json(['message' => 'all charges retrieved', 'body' => $result, 'error' => false], 200);
     }
 }

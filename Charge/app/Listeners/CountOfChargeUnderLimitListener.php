@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\App;
 
-class CountOfChargeUnderLimitListener
+class CountOfChargeUnderLimitListener implements ShouldQueue
 {
 
     private $chargeRepository;
