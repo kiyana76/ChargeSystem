@@ -17,6 +17,6 @@ class ChargeCategoryController extends Controller
     public function index() {
         $charge_categories = $this->chargeCategoryRepository->index();
 
-        return response()->json(['message' => 'charge category retrieved!', 'body' => [$charge_categories], 'error' => false], 200);
+        return response()->json(['message' => 'charge category retrieved!', 'body' => $charge_categories, 'error' => false], 200);
     }
 }
