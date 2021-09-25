@@ -54,4 +54,10 @@ class ChargeController extends Controller
         }
         return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
     }
+
+    public function burnt(Request $request) {
+        $data = $request->all();
+        $response = Http::post(config('api_gateway.charge_service_url') . 'charge/burnt', $data);
+        return response()->json(json_decode($response->getBody()->getContents()));
+    }
 }

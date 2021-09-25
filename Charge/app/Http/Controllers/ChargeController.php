@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Burnt;
 use App\Classes\DemandCharge;
 use App\Models\ChargeCategory;
 use App\Repository\ChargeRepositoryInterface;
@@ -62,5 +63,21 @@ class ChargeController extends Controller
         }
         $result = $this->chargeRepository->index(['*'], $filters);
         return response()->json(['message' => 'all charges retrieved', 'body' => $result, 'error' => false], 200);
+    }
+
+    public function burnt(Request $request) {
+        $rules = [
+            'mobile' => 'required|valid_mobile',
+            'code' => 'required'
+        ];
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+
+        $burnt_class = new Burnt();
+
+        $result = $burnt_class->burnt($data);
+
+        return response()->json(['message' => $result['message'], 'body' => [], 'error' => $result['error']], $result['status_code']);
     }
 }
