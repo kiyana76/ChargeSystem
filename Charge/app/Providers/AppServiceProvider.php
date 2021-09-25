@@ -15,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        app('validator')->extend(
+            'valid_mobile',
+            'App\Rules\IranianMobileNumber@passes'
+        );
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->bind(CreateChargeFactoryInterface::class, UuIdV1::class);
     }
