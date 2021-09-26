@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 'php -S 0.0.0.0:8004 -t public'
+    volumes:
+          - .:/app
+    ports:
+      - 8004:8004
+    depends_on:
+      - order_db
+    networks:
+      - app-network
+
+  order_db:
+    image: mysql:5.7.22
+    container_name: order_db
+    restart: on-failure
+    tty: true
+    environment:
+      MYSQL_DATABASE: order
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - "33066:3306"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+    external: true
