@@ -13,6 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        app('validator')->extend(
+            'valid_mobile',
+            'App\Rules\IranianMobileNumber@passes'
+        );
     }
 }
