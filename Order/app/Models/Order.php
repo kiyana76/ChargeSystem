@@ -19,4 +19,8 @@ class Order extends Model
         'customer_id',
         'mobile'
     ];
+
+    public function orderItem() {
+        return $this->hasMany(OrderItem::class);
+    }
 }

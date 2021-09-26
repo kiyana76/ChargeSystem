@@ -24,6 +24,12 @@ class OrderController extends Controller
         $data = $request->only($items);
         $order_class = new Order();
         $result = $order_class->create($data);
+        $order_id = $result['body']['order']->id;
+        $amount = $order_class->getAmountOrder($order_id);
+
+        $payment_status = $order_class->payment($data['mobile'], $amount, $order_id);
+
+        $order_result = $order_class->update($order_id, $payment_status);
 
         return response()->json(['message' => $result['message'], 'body' => $result['body'], 'error' => $result['error']], $result['status_code']);
     }
