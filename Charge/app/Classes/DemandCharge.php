@@ -29,7 +29,7 @@ class DemandCharge
         $update_data = [
             'expire_date' => Carbon::now()->addDays(config('charge.expire_date_after')),
             'sold_status' => 'sold',
-            'user_id' => $data['user_id'], //if order service demand charge we save user_id null and company_id must be root company
+            'user_id' => $data['user_id'] ?? null, //if order service demand charge we save user_id null and company_id must be root company
             'company_id' => $data['company_id'],
         ];
         $charges = [];

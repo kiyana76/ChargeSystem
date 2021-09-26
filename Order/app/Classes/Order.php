@@ -66,14 +66,14 @@ class Order
         $response = Http::post(config('api_gateway.transaction_service_url') . 'payment', $data);
         $json_response = json_decode($response->getBody()->getContents());
 
-        if ($json_response->error || !$json_response)
+        if (!$json_response || $json_response->error)
             return ['message' => 'something wrong in payment', 'body' => [], 'error' => true, 'status_code' => 200];
 
         $payment_status = null;
-        if ($json_response->body['status'] == 'cancel') {
+        if ($json_response->body->status == 'cancel') {
             $payment_status = 'cancel';
         }
-        elseif ($json_response->body['status'] == 'success') {
+        elseif ($json_response->body->status == 'success') {
             $payment_status = 'success';
         }
         else
@@ -99,7 +99,6 @@ class Order
                 array_push($charges, $charge);
             }
         }
-
         $this->orderRepository->update($order_id, ['status' => $payment_status]);
 
         DB::commit();
@@ -121,7 +120,7 @@ class Order
         $response = Http::post(config('api_gateway.charge_service_url') . 'charge/demand', $data);
         $json_response = json_decode($response->getBody()->getContents());
 
-        if ($json_response->error)
+        if (!$json_response || $json_response->error)
             return false;
 
         return $json_response->body[0];
