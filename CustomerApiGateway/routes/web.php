@@ -15,6 +15,7 @@
 $router->post('login', 'AuthController@login');
 $router->get('charge-categories', 'ChargeCategoryController@index');
 $router->post('orders', 'OrderController@create');
+$router->get('orders', 'OrderController@index');
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
