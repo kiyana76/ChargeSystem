@@ -66,7 +66,7 @@ class Order
         $response = Http::post(config('api_gateway.transaction_service_url') . 'payment', $data);
         $json_response = json_decode($response->getBody()->getContents());
 
-        if (!$json_response || $json_response->error)
+        if (!$json_response)
             return ['message' => 'something wrong in payment', 'body' => [], 'error' => true, 'status_code' => 200];
 
         $payment_status = null;
@@ -124,5 +124,10 @@ class Order
             return false;
 
         return $json_response->body[0];
+    }
+
+    public function index(array $data)
+    {
+        return $this->orderRepository->index(['*'], $data, ['orderItem']);
     }
 }

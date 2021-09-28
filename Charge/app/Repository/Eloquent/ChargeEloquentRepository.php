@@ -51,6 +51,6 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
             unset($conditions['created_at']);
         }
 
-        return $charge_class->select($columns)->where($conditions)->with($relations)->get();
+        return $charge_class->where($conditions)->with($relations)->get();
     }
 }

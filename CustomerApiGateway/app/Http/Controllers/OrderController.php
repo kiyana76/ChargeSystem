@@ -25,4 +25,22 @@ class OrderController extends Controller
         }
         return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
     }
+
+    public function index(Request $request) {
+        $auth_class = new Auth();
+        $token = $request->header('authorization') ?? '';
+        $user = $auth_class->getUser($token);
+        if ($user) {
+            $data = $request->all();
+            $data['customer_id'] = $user['id'];
+            $data['mobile'] = $user['mobile'];
+
+            $response = Http::get(config('api_gateway.order_service_url') . '/orders', $data);
+            $json_response = json_decode($response->getBody()->getContents());
+
+            return response()->json($json_response);
+        }
+
+        return response()->json(['message' => 'Unauthorized', 'body' => [], 'error' => true], 401);
+    }
 }
