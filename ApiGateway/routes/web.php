@@ -23,6 +23,10 @@ $router->get('charge', 'ChargeService\ChargeController@index');
 $router->post('charge/burnt', 'ChargeService\ChargeController@burnt');
 /************************* End ChargeService API**************/
 
+/************************* Start OrderService API**************/
+$router->get('orders', 'OrderService\OrderController@index');
+/************************* End OrderService API**************/
+
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
