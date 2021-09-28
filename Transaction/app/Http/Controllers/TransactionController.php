@@ -10,7 +10,6 @@ class TransactionController extends Controller
         $array = ['fail', 'cancel', 'success'];
 
         $random_status = $array[array_rand($array)];
-        //$random_status = 'success';
 
         if ($random_status == 'success')
             return response()->json(['message' => 'payment successful', 'body' => ['status' => 'success'], 'error' => false], 200);
