@@ -6,7 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
-date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+date_default_timezone_set(env('APP_TIMEZONE', 'Asia/Tehran'));
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +23,15 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+ $app->withFacades();
 
-// $app->withEloquent();
+ $app->withEloquent();
+
+if (!class_exists('Payment')) {
+    class_alias('Shetabit\Payment\Facade\Payment', 'Payment');
+}
+
+$app->register('Shetabit\Payment\Provider\PaymentServiceProvider');
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +116,10 @@ $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
+});
+
+collect(scandir(__DIR__ . '/../config'))->each(function ($item) use ($app) {
+    $app->configure(basename($item, '.php'));
 });
 
 return $app;

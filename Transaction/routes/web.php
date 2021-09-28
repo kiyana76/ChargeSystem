@@ -14,7 +14,9 @@
 */
 
 $router->post('payment', 'TransactionController@payment');
+$router->post('payment_test', 'TransactionController@payment_test');
 
 $router->get('/', function () use ($router) {
+    dd(phpinfo());
     return $router->app->version();
 });
