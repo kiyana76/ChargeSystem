@@ -27,14 +27,9 @@ class OrderController extends Controller
         $order_id = $result['body']['order']->id;
         $amount = $order_class->getAmountOrder($order_id);
 
-        $payment_status = $order_class->payment($data['mobile'], $amount, $order_id);
+        $payment_link = $order_class->payment($data['mobile'], $amount, $order_id);
 
-        if (isset($payment_status['error']) && $payment_status['error'])
-            return response()->json(['message' => $payment_status['message'], 'body' => $payment_status['body'], 'error' => $payment_status['error']], $payment_status['status_code']);
-
-        $order_result = $order_class->update($order_id, $payment_status);
-
-        return response()->json(['message' => $order_result['message'], 'body' => $order_result['body'], 'error' => $order_result['error']], $order_result['status_code']);
+        return response()->json($payment_link);
     }
 
     public function index(Request $request) {
@@ -49,5 +44,13 @@ class OrderController extends Controller
         $result = $order_class->index($filters);
 
         return response()->json(['message' => 'all orders retrieve!', 'body' => $result, 'error' => false], 200);
+    }
+
+    public function update(Request $request) {
+        $data = $request->all();
+        $order_class = new Order();
+        $order_result = $order_class->update($data['body']['order_id'], $data['body']);
+
+        return response()->json(['message' => $order_result['message'], 'body' => $order_result['body'], 'error' => $order_result['error']], $order_result['status_code']);
     }
 }

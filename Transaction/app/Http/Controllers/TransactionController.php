@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\Gateway\GatewayFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Multipay\Payment;
@@ -44,7 +45,7 @@ class TransactionController extends Controller
         ];
         $data = $request->only($items);
         $gateway = new GatewayFactory();
-        return $gateway->select()->pay($data);
+        return response()->json($gateway->select()->pay($data));
     }
 
     public function zarinpalCallback(Request $request) {
@@ -52,7 +53,12 @@ class TransactionController extends Controller
         $result = $gateway->select()->verify($request->Authority);
 
         if ($result['status'] == 'success')
-            return response()->json(['message' => 'payment successful', 'body' => ['status' => 'success', 'message' => $result['message']], 'error' => false], 200);
-        return response()->json(['message' => 'payment ' . $result['status'], 'body' => ['status' => $result['status'], 'message' => $result['message']], 'error' => true], 200);
+            $data = ['message' => 'payment successful', 'body' => ['status' => 'success', 'message' => $result['message'], 'order_id' => $result['order_id']], 'error' => false];
+        else
+            $data = ['message' => 'payment ' . $result['status'], 'body' => ['status' => $result['status'], 'message' => $result['message'], 'order_id' => $result['order_id']], 'error' => true];
+
+        $guzzle_request = Http::put(config('api_gateway.order_service_url') . 'orders', $data);
+        $json_response = json_decode($guzzle_request->getBody()->getContents());
+        return response()->json($json_response);
     }
 }

@@ -54,7 +54,7 @@ class Zarinpal implements GatewayInterface
 
             $this->transactionRepository->update($transaction->id, ['status' => 'success', 'ref_number' => $receipt->getReferenceId()]);
 
-            return ['status' => 'success', 'message' => 'با موفقیت پرداخت شد. شماره مرجع:' . $receipt->getReferenceId()];
+            return ['status' => 'success', 'message' => 'با موفقیت پرداخت شد. شماره مرجع:' . $receipt->getReferenceId(), 'order_id' => $transaction->order_id];
 
 
         } catch (InvalidPaymentException $exception) {
@@ -66,11 +66,11 @@ class Zarinpal implements GatewayInterface
 
             if ($exception->getCode() == -22) {
                 $this->transactionRepository->update($transaction->id, ['status' => 'cancel']);
-                return ['status' => 'cancel', 'message' => $exception->getMessage()];
+                return ['status' => 'cancel', 'message' => $exception->getMessage(), 'order_id' => $transaction->order_id];
             }
             else {
-                $this->transactionRepository->update($transaction->id, ['status' => 'failed']);
-                return ['status' => 'failed', 'message' => $exception->getMessage()];
+                $this->transactionRepository->update($transaction->id, ['status' => 'fail']);
+                return ['status' => 'fail', 'message' => $exception->getMessage(), 'order_id' => $transaction->order_id];
             }
         }
     }
