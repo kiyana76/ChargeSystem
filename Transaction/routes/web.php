@@ -14,7 +14,10 @@
 */
 
 $router->post('payment', 'TransactionController@payment');
+$router->post('payment_test', 'TransactionController@payment_test');
+$router->get('/callback', 'TransactionController@callback');
 
 $router->get('/', function () use ($router) {
+    dd(phpinfo());
     return $router->app->version();
 });
