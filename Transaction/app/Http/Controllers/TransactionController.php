@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repository\TransactionRepositoryInterface;
+use App\Services\Gateway\GatewayFactory;
 use Illuminate\Http\Request;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
@@ -29,50 +30,29 @@ class TransactionController extends Controller
     }
 
     public function payment_test(Request $request) {
-        $paymentConfig = require(__DIR__ . '/../../../config/payment.php');
+        $rules = [
+            'amount' => 'required',
+            'order_id' => 'required',
+            'mobile' => 'required',
+            ];
+        $this->validate($request, $rules);
 
-        $payment = new Payment($paymentConfig);
-
-        $invoice = new Invoice;
-        $invoice->amount(1000);
-        $invoice->detail(['mobile' => '09302828629']);
-
-        return json_decode($payment->purchase($invoice, function ($driver, $transactionId) {
-            return $this->transactionRepository->create(['AuthId' => $transactionId, 'driver' => 'zarinpal', 'order_id' => 5, 'status' => 'created', 'mobile' => '09302828629', 'amount' => '1000000']);
-        })->pay()->toJson())->action;
+        $items = [
+            'mobile',
+            'order_id',
+            'amount'
+        ];
+        $data = $request->only($items);
+        $gateway = new GatewayFactory();
+        return $gateway->select()->pay($data);
     }
 
-    public function callback(Request $request) {
-        $status = $request->Status;
-        $AuthID= $request->Authority;
-        $transaction = $this->transactionRepository->show(['*'], ['AuthId' => $AuthID]);
+    public function zarinpalCallback(Request $request) {
+        $gateway = new GatewayFactory('zarinpal');
+        $result = $gateway->select()->verify($request->Authority);
 
-        // load the config file from your project
-        $paymentConfig = require(__DIR__ . '/../../../config/payment.php');
-
-        $payment = new Payment($paymentConfig);
-
-        try {
-            $receipt = $payment->amount(1000)->transactionId($AuthID)->verify();
-
-            // You can show payment referenceId to the user.
-
-            $this->transactionRepository->update($transaction->id, ['status' => 'success', 'ref_number' => $receipt->getReferenceId()]);
-            echo 'this is ref id: ' . $receipt->getReferenceId();
-
-
-        } catch (InvalidPaymentException $exception) {
-            /**
-            when payment is not verified, it will throw an exception.
-            We can catch the exception to handle invalid payments.
-            getMessage method, returns a suitable message that can be used in user interface.
-             **/
-
-            if ($exception->getCode() == -22)
-                $this->transactionRepository->update($transaction->id, ['status' => 'cancel']);
-            else
-                $this->transactionRepository->update($transaction->id, ['status' => 'failed']);
-            echo $exception->getMessage();
-        }
+        if ($result['status'] == 'success')
+            return response()->json(['message' => 'payment successful', 'body' => ['status' => 'success', 'message' => $result['message']], 'error' => false], 200);
+        return response()->json(['message' => 'payment ' . $result['status'], 'body' => ['status' => $result['status'], 'message' => $result['message']], 'error' => true], 200);
     }
 }

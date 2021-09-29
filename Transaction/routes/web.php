@@ -15,7 +15,7 @@
 
 $router->post('payment', 'TransactionController@payment');
 $router->post('payment_test', 'TransactionController@payment_test');
-$router->get('/callback', 'TransactionController@callback');
+$router->get('/zarinpal-callback', 'TransactionController@zarinpalCallback');
 
 $router->get('/', function () use ($router) {
     dd(phpinfo());

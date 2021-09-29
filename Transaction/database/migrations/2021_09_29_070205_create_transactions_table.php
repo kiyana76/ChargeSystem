@@ -20,7 +20,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('order_id');
             $table->string('ref_number')->nullable();
             $table->string('driver');
-            $table->string('amount');
+            $table->integer('amount');
             $table->string('mobile');
             $table->timestamps();
         });
