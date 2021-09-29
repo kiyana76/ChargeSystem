@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Http\Request;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
@@ -10,6 +10,14 @@ use Shetabit\Multipay\Payment;
 
 class TransactionController extends Controller
 {
+
+    private $transactionRepository;
+
+    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    {
+        $this->transactionRepository = $transactionRepository;
+    }
+
     public function payment(Request $request) {
         $array = ['fail', 'cancel', 'success'];
 
@@ -28,17 +36,16 @@ class TransactionController extends Controller
         $invoice = new Invoice;
         $invoice->amount(1000);
         $invoice->detail(['mobile' => '09302828629']);
-        $driver = $invoice->getDriver();
 
         return json_decode($payment->purchase($invoice, function ($driver, $transactionId) {
-            return Transaction::create(['AuthId' => $transactionId, 'driver' => 'zarinpal', 'order_id' => 5, 'status' => 'created', 'mobile' => '09302828629', 'amount' => '1000000']);
+            return $this->transactionRepository->create(['AuthId' => $transactionId, 'driver' => 'zarinpal', 'order_id' => 5, 'status' => 'created', 'mobile' => '09302828629', 'amount' => '1000000']);
         })->pay()->toJson())->action;
     }
 
     public function callback(Request $request) {
         $status = $request->Status;
         $AuthID= $request->Authority;
-        $transaction = Transaction::where('AuthId', $AuthID)->first();
+        $transaction = $this->transactionRepository->show(['*'], ['AuthId' => $AuthID]);
 
         // load the config file from your project
         $paymentConfig = require(__DIR__ . '/../../../config/payment.php');
@@ -50,7 +57,7 @@ class TransactionController extends Controller
 
             // You can show payment referenceId to the user.
 
-            $transaction->update(['status' => 'success', 'ref_number' => $receipt->getReferenceId()]);
+            $this->transactionRepository->update($transaction->id, ['status' => 'success', 'ref_number' => $receipt->getReferenceId()]);
             echo 'this is ref id: ' . $receipt->getReferenceId();
 
 
@@ -62,9 +69,9 @@ class TransactionController extends Controller
              **/
 
             if ($exception->getCode() == -22)
-                $transaction->update(['status' => 'cancel']);
+                $this->transactionRepository->update($transaction->id, ['status' => 'cancel']);
             else
-                $transaction->update(['status' => 'failed']);
+                $this->transactionRepository->update($transaction->id, ['status' => 'failed']);
             echo $exception->getMessage();
         }
     }
