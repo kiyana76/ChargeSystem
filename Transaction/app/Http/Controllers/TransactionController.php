@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Repository\TransactionRepositoryInterface;
+use App\Services\Gateway\GatewayFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Multipay\Invoice;
 use Shetabit\Multipay\Payment;
 
 class TransactionController extends Controller
 {
+
+    private $transactionRepository;
+
+    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    {
+        $this->transactionRepository = $transactionRepository;
+    }
+
     public function payment(Request $request) {
         $array = ['fail', 'cancel', 'success'];
 
@@ -21,51 +31,34 @@ class TransactionController extends Controller
     }
 
     public function payment_test(Request $request) {
-        $paymentConfig = require(__DIR__ . '/../../../config/payment.php');
+        $rules = [
+            'amount' => 'required',
+            'order_id' => 'required',
+            'mobile' => 'required',
+            ];
+        $this->validate($request, $rules);
 
-        $payment = new Payment($paymentConfig);
-
-        $invoice = new Invoice;
-        $invoice->amount(1000);
-        $invoice->detail(['mobile' => '09302828629']);
-        $driver = $invoice->getDriver();
-
-        return json_decode($payment->purchase($invoice, function ($driver, $transactionId) {
-            return Transaction::create(['AuthId' => $transactionId, 'driver' => 'zarinpal', 'order_id' => 5, 'status' => 'created', 'mobile' => '09302828629', 'amount' => '1000000']);
-        })->pay()->toJson())->action;
+        $items = [
+            'mobile',
+            'order_id',
+            'amount'
+        ];
+        $data = $request->only($items);
+        $gateway = new GatewayFactory();
+        return response()->json($gateway->select()->pay($data));
     }
 
-    public function callback(Request $request) {
-        $status = $request->Status;
-        $AuthID= $request->Authority;
-        $transaction = Transaction::where('AuthId', $AuthID)->first();
+    public function zarinpalCallback(Request $request) {
+        $gateway = new GatewayFactory('zarinpal');
+        $result = $gateway->select()->verify($request->Authority);
 
-        // load the config file from your project
-        $paymentConfig = require(__DIR__ . '/../../../config/payment.php');
+        if ($result['status'] == 'success')
+            $data = ['message' => 'payment successful', 'body' => ['status' => 'success', 'message' => $result['message'], 'order_id' => $result['order_id']], 'error' => false];
+        else
+            $data = ['message' => 'payment ' . $result['status'], 'body' => ['status' => $result['status'], 'message' => $result['message'], 'order_id' => $result['order_id']], 'error' => true];
 
-        $payment = new Payment($paymentConfig);
-
-        try {
-            $receipt = $payment->amount(1000)->transactionId($AuthID)->verify();
-
-            // You can show payment referenceId to the user.
-
-            $transaction->update(['status' => 'success', 'ref_number' => $receipt->getReferenceId()]);
-            echo 'this is ref id: ' . $receipt->getReferenceId();
-
-
-        } catch (InvalidPaymentException $exception) {
-            /**
-            when payment is not verified, it will throw an exception.
-            We can catch the exception to handle invalid payments.
-            getMessage method, returns a suitable message that can be used in user interface.
-             **/
-
-            if ($exception->getCode() == -22)
-                $transaction->update(['status' => 'cancel']);
-            else
-                $transaction->update(['status' => 'failed']);
-            echo $exception->getMessage();
-        }
+        $guzzle_request = Http::put(config('api_gateway.order_service_url') . 'orders', $data);
+        $json_response = json_decode($guzzle_request->getBody()->getContents());
+        return response()->json($json_response);
     }
 }

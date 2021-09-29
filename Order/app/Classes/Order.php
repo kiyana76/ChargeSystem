@@ -63,23 +63,13 @@ class Order
     public function payment($mobile, int $amount, $order_id)
     {
         $data = ['mobile' => $mobile, 'amount' => $amount, 'order_id' => $order_id];
-        $response = Http::post(config('api_gateway.transaction_service_url') . 'payment', $data);
+        $response = Http::post(config('api_gateway.transaction_service_url') . 'payment_test', $data);
         $json_response = json_decode($response->getBody()->getContents());
 
         if (!$json_response)
             return ['message' => 'something wrong in payment', 'body' => [], 'error' => true, 'status_code' => 200];
 
-        $payment_status = null;
-        if ($json_response->body->status == 'cancel') {
-            $payment_status = 'cancel';
-        }
-        elseif ($json_response->body->status == 'success') {
-            $payment_status = 'success';
-        }
-        else
-            $payment_status = 'fail';
-
-        return $payment_status;
+        return $json_response;
     }
 
     public function update($order_id,  $payment_status)
@@ -87,10 +77,11 @@ class Order
         $order = $this->orderRepository->show(['*'], ['id' => $order_id], ['orderItem']);
 
         DB::beginTransaction();
-        if ($payment_status == 'success') {
+        if ($payment_status['status'] == 'success') {
             $charges = [];
             foreach ($order->orderItem as $orderItem) {
                 $charge = $this->getCharge($orderItem->category_id);
+
                 if (!$charge) {
                     DB::rollBack();
                     return ['message' => 'something wrong in produce charge', 'body' => [], 'error' => true, 'status_code' => 200];
@@ -99,13 +90,14 @@ class Order
                 array_push($charges, $charge);
             }
         }
-        $this->orderRepository->update($order_id, ['status' => $payment_status]);
+
+        $this->orderRepository->update($order_id, ['status' => $payment_status['status']]);
 
         DB::commit();
 
-        if ($payment_status == 'success')
+        if ($payment_status['status'] == 'success')
             return ['message' => 'charge created successfully', 'body' => $charges, 'error' => false, 'status_code' => 201];
-        return ['message' => 'something wrong in payment', 'body' => [], 'error' => true, 'status_code' => 200];
+        return ['message' => $payment_status['message'], 'body' => [], 'error' => true, 'status_code' => 200];
 
     }
 
@@ -117,6 +109,7 @@ class Order
             'user_type' => 'customer',
             'company_id' => config('api_gateway.company_id'),
         ];
+
         $response = Http::post(config('api_gateway.charge_service_url') . 'charge/demand', $data);
         $json_response = json_decode($response->getBody()->getContents());
 

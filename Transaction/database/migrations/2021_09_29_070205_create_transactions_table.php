@@ -16,11 +16,11 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->uuid('AuthId');
-            $table->enum('status', ['created', 'failed', 'cancel', 'success']);
+            $table->enum('status', ['created', 'fail', 'cancel', 'success']);
             $table->unsignedBigInteger('order_id');
             $table->string('ref_number')->nullable();
             $table->string('driver');
-            $table->string('amount');
+            $table->integer('amount');
             $table->string('mobile');
             $table->timestamps();
         });

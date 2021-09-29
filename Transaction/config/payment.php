@@ -219,7 +219,7 @@ return [
 
             'mode' => 'sandbox', // can be normal, sandbox, zaringate
             'merchantId' => '000000000000000000000000000000000000',
-            'callbackUrl' => 'http://192.168.0.1:8005/callback',
+            'callbackUrl' => 'http://192.168.0.1:8005/zarinpal-callback',
             'description' => 'payment using website test',
         ],
         'zibal' => [

@@ -17,5 +17,7 @@ class AppServiceProvider extends ServiceProvider
             'valid_mobile',
             'App\Rules\IranianMobileNumber@passes'
         );
+
+        $this->app->register(RepositoryServiceProvider::class);
     }
 }

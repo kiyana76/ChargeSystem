@@ -4,6 +4,7 @@
 
 
 $router->post('orders', 'OrderController@create');
+$router->put('orders', 'OrderController@update');
 $router->get('orders', 'OrderController@index');
 
 $router->get('/', function () use ($router) {
