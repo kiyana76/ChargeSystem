@@ -21,16 +21,6 @@ class TransactionController extends Controller
     }
 
     public function payment(Request $request) {
-        $array = ['fail', 'cancel', 'success'];
-
-        $random_status = $array[array_rand($array)];
-
-        if ($random_status == 'success')
-            return response()->json(['message' => 'payment successful', 'body' => ['status' => 'success'], 'error' => false], 200);
-        return response()->json(['message' => 'payment ' . $random_status, 'body' => ['status' => $random_status], 'error' => true], 200);
-    }
-
-    public function payment_test(Request $request) {
         $rules = [
             'amount' => 'required',
             'order_id' => 'required',
@@ -60,5 +50,17 @@ class TransactionController extends Controller
         $guzzle_request = Http::put(config('api_gateway.order_service_url') . 'orders', $data);
         $json_response = json_decode($guzzle_request->getBody()->getContents());
         return response()->json($json_response);
+    }
+
+    public function index(Request $request) {
+        $filters = $request->all();
+
+        foreach ($filters as $key => $value) {
+            if ($value == '')
+                unset($filters[$key]);
+        }
+        $result = $this->transactionRepository->index(['*'], $filters);
+
+        return response()->json(['message' => 'all charges retrieved', 'body' => $result, 'error' => false], 200);
     }
 }

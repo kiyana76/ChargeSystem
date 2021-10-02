@@ -46,6 +46,38 @@ class OrderController extends Controller
         return response()->json(['message' => 'all orders retrieve!', 'body' => $result, 'error' => false], 200);
     }
 
+    public function indexWithChargeDetails(Request $request) {
+        $order_class = new Order();
+        $order_items = [
+            'mobile',
+            'status',
+            'date_from',
+            'date_to'
+        ];
+        $charge_items = [
+            'expire_date_from',
+            'expire_date_to',
+            'sold_status',
+            'charge_category_id'
+        ];
+        $order_filters = $request->only($order_items);
+        $charge_filters = $request->only($charge_items);
+        //return response()->json(['message' => 'all orders retrieve!', 'body' => [$order_filters, $charge_filters], 'error' => false], 200);
+        foreach ($order_filters as $key => $value) {
+            if ($value == '')
+                unset($order_filters[$key]);
+        }
+
+        foreach ($charge_filters as $key => $value) {
+            if ($value == '')
+                unset($charge_filters[$key]);
+        }
+
+        $result = $order_class->indexWithChargeDetails($order_filters, $charge_filters);
+
+        return response()->json(['message' => 'all orders retrieve!', 'body' => $result, 'error' => false], 200);
+    }
+
     public function update(Request $request) {
         $data = $request->all();
         $order_class = new Order();
