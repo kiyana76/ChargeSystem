@@ -51,6 +51,11 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
             unset($conditions['created_at']);
         }
 
+        if (isset($conditions['charges_id']) && $conditions['charges_id'] != null) {
+            $charge_class = $charge_class->whereIn('id', $conditions['charges_id']);
+            unset($conditions['charges_id']);
+        }
+
         return $charge_class->where($conditions)->with($relations)->get();
     }
 }

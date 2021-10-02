@@ -17,6 +17,8 @@ $router->get('charge-categories', 'ChargeCategoryController@index');
 $router->post('orders', 'OrderController@create');
 $router->get('orders', 'OrderController@index');
 $router->post('charge/burnt', 'ChargeController@burnt');
+$router->get('charge', 'ChargeController@index');
+$router->get('transactions', 'TransactionController@index');
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
