@@ -49,7 +49,10 @@ class OrderController extends Controller
     public function update(Request $request) {
         $data = $request->all();
         $order_class = new Order();
-        $order_result = $order_class->update($data['body']['order_id'], $data['body']);
+        $order_id = $data['body']['order_id'];
+        $status  = $data['body']['status'];
+        $message = $data['body']['message'];
+        $order_result = $order_class->update($order_id, $status , $message);
 
         return response()->json(['message' => $order_result['message'], 'body' => $order_result['body'], 'error' => $order_result['error']], $order_result['status_code']);
     }

@@ -72,12 +72,12 @@ class Order
         return $json_response;
     }
 
-    public function update($order_id,  $payment_status)
+    public function update($order_id,  $status, $message)
     {
         $order = $this->orderRepository->show(['*'], ['id' => $order_id], ['orderItem']);
 
         DB::beginTransaction();
-        if ($payment_status['status'] == 'success') {
+        if ($status == 'success') {
             $charges = [];
             foreach ($order->orderItem as $orderItem) {
                 $charge = $this->getCharge($orderItem->category_id);
@@ -91,13 +91,13 @@ class Order
             }
         }
 
-        $this->orderRepository->update($order_id, ['status' => $payment_status['status']]);
+        $this->orderRepository->update($order_id, ['status' => $status]);
 
         DB::commit();
 
-        if ($payment_status['status'] == 'success')
+        if ($status == 'success')
             return ['message' => 'charge created successfully', 'body' => $charges, 'error' => false, 'status_code' => 201];
-        return ['message' => $payment_status['message'], 'body' => [], 'error' => true, 'status_code' => 200];
+        return ['message' => $message, 'body' => [], 'error' => true, 'status_code' => 200];
 
     }
 
