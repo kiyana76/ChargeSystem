@@ -2,7 +2,7 @@
 This project impelement mobile charge code for our company customer(B2C) and other company (B2B).
 
 
-##Getting Started
+## Getting Started
 * clone project
 
 ```
