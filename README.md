@@ -1,5 +1,5 @@
 # ChargeSystem
-This project impelement mobile charge code for our company customer(B2C) and other company (B2B).
+This project impelement API mobile charge code for our company customer(B2C) and other company (B2B).
 
 
 ## Getting Started
