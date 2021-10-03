@@ -4,5 +4,5 @@ namespace App\Classes\CreateCharge;
 
 interface CreateChargeFactoryInterface
 {
-    public function getChargeCode();
+    public function getChargeCode ();
 }

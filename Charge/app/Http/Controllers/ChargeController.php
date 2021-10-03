@@ -14,20 +14,21 @@ class ChargeController extends Controller
 {
     private ChargeRepositoryInterface $chargeRepository;
 
-    public function __construct(ChargeRepositoryInterface $chargeRepository)
+    public function __construct (ChargeRepositoryInterface $chargeRepository)
     {
         $this->chargeRepository = $chargeRepository;
     }
 
-    public function demand(Request $request) {
+    public function demand (Request $request)
+    {
         $rules = [
             'charge_category_id' => 'required|exists:charge_categories,id',
-            'user_type' => ['required', Rule::in(['admin', 'seller', 'customer'])],
-            'user_id' => [Rule::requiredIf(function () use ($request) {
+            'user_type'          => ['required', Rule::in(['admin', 'seller', 'customer'])],
+            'user_id'            => [Rule::requiredIf(function () use ($request) {
                 return $request->user_type != 'customer';
             })],
-            'company_id' => 'required',
-            'count' => 'required',
+            'company_id'         => 'required',
+            'count'              => 'required',
         ];
 
         $items = [
@@ -38,7 +39,7 @@ class ChargeController extends Controller
         ];
 
         $this->validate($request, $rules);
-        $data = $request->only($items);
+        $data                = $request->only($items);
         $demand_charge_class = new DemandCharge();
         switch ($request->user_type) {
             case 'customer':
@@ -55,7 +56,8 @@ class ChargeController extends Controller
         return response()->json(['message' => $result, 'body' => [], 'error' => true], 400);
     }
 
-    public function index(Request $request) {
+    public function index (Request $request)
+    {
         $filters = $request->all();
         foreach ($filters as $key => $value) {
             if ($value == '')
@@ -65,10 +67,11 @@ class ChargeController extends Controller
         return response()->json(['message' => 'all charges retrieved', 'body' => $result, 'error' => false], 200);
     }
 
-    public function burnt(Request $request) {
+    public function burnt (Request $request)
+    {
         $rules = [
             'mobile' => 'required|valid_mobile',
-            'code' => 'required'
+            'code'   => 'required',
         ];
         $this->validate($request, $rules);
 

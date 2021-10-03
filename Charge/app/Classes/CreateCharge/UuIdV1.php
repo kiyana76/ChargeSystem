@@ -9,7 +9,7 @@ class UuIdV1 implements CreateChargeFactoryInterface
 {
     use DatabaseTransactions;
 
-    public function getChargeCode()
+    public function getChargeCode ()
     {
         return Uuid::v1();
     }

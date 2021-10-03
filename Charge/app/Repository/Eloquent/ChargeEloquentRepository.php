@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterface
 {
 
-    public function show(array $columns = ['*'], array $conditions = [], array $relation = []): ?Model
+    public function show (array $columns = ['*'], array $conditions = [], array $relation = []): ?Model
     {
         return Charge::select($columns)->where($conditions)->with($relation)->first();
     }
 
-    public function create(array $payload): ?Model
+    public function create (array $payload): ?Model
     {
         try {
             return Charge::create($payload)->fresh();
@@ -24,24 +24,24 @@ class ChargeEloquentRepository implements \App\Repository\ChargeRepositoryInterf
         }
     }
 
-    public function update(int $id, array $payload): ?Model
+    public function update (int $id, array $payload): ?Model
     {
         $model = $this->show(['*'], ['id' => $id]);
         return $model->update($payload) ? $model->fresh() : null;
     }
 
-    public function index(array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
+    public function index (array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
     {
         $charge_class = Charge::select($columns);
 
         if (isset($conditions['expire_date_from']) && $conditions['expire_date_from'] != null) {
-            $date_from = Carbon::parse($conditions['expire_date_from'])->format('Y-m-d 00:00:00');
+            $date_from    = Carbon::parse($conditions['expire_date_from'])->format('Y-m-d 00:00:00');
             $charge_class = $charge_class->where('expire_date', '>=', $date_from);
             unset($conditions['expire_date_from']);
         }
 
         if (isset($conditions['expire_date_to']) && $conditions['expire_date_to'] != null) {
-            $date_to = Carbon::parse($conditions['expire_date_to'])->format('Y-m-d 23:59:59');
+            $date_to      = Carbon::parse($conditions['expire_date_to'])->format('Y-m-d 23:59:59');
             $charge_class = $charge_class->where('expire_date', '<=', $date_to);
             unset($conditions['expire_date_to']);
         }

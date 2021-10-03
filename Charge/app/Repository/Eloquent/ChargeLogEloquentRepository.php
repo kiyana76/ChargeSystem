@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\Model;
 class ChargeLogEloquentRepository implements ChargeLogRepositoryInterface
 {
 
-    public function show(array $columns = ['*'], array $conditions = [], array $relation = []): ?Model
+    public function show (array $columns = ['*'], array $conditions = [], array $relation = []): ?Model
     {
         return ChargeLog::select($columns)->where($conditions)->with($relation)->first();
     }
 
-    public function create(array $payload): ?Model
+    public function create (array $payload): ?Model
     {
         try {
             return ChargeLog::create($payload)->fresh();
@@ -25,7 +25,7 @@ class ChargeLogEloquentRepository implements ChargeLogRepositoryInterface
         }
     }
 
-    public function index(array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
+    public function index (array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection
     {
 
         return ChargeLog::select($columns)->where($conditions)->with($relations)->get();

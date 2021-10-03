@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Classes;
 
 use App\Classes\CreateCharge\CreateChargeFactoryInterface;
@@ -17,22 +18,24 @@ class DemandCharge
 
     private $chargeRepository;
     private $chargeCategoryRepository;
-    public function __construct()
+
+    public function __construct ()
     {
-        $this->chargeRepository = App::make(ChargeRepositoryInterface::class);
+        $this->chargeRepository         = App::make(ChargeRepositoryInterface::class);
         $this->chargeCategoryRepository = App::make(ChargeCategoryRepositoryInterface::class);
     }
 
-    public function adminDemandCharge($data) : ?array {
+    public function adminDemandCharge ($data): ?array
+    {
         DB::beginTransaction();
-        $count = $data['count'];
+        $count       = $data['count'];
         $update_data = [
             'expire_date' => Carbon::now()->addDays(config('charge.expire_date_after')),
             'sold_status' => 'sold',
-            'user_id' => $data['user_id'] ?? null, //if order service demand charge we save user_id null and company_id must be root company
-            'company_id' => $data['company_id'],
+            'user_id'     => $data['user_id'] ?? null, //if order service demand charge we save user_id null and company_id must be root company
+            'company_id'  => $data['company_id'],
         ];
-        $charges = [];
+        $charges     = [];
         for ($i = 0; $i < $count; $i++) {
             $charge = $this->getValidFreeCharge($data['charge_category_id']);
             $charge = $this->chargeRepository->update($charge->id, $update_data);
@@ -48,31 +51,32 @@ class DemandCharge
         return $charges;
     }
 
-    public function sellerDemandCharge($data) {
+    public function sellerDemandCharge ($data)
+    {
         DB::beginTransaction();
-            $price = $this->getPriceDemandCharges($data['count'], $data['charge_category_id']);
-            $credit_status = $this->checkCredit($data['user_id'], $price);
-            if (! $credit_status)
-                return ' credit not enough';
+        $price         = $this->getPriceDemandCharges($data['count'], $data['charge_category_id']);
+        $credit_status = $this->checkCredit($data['user_id'], $price);
+        if (!$credit_status)
+            return ' credit not enough';
 
-            $lock_credit = $this->changeSellerCredit($data['user_id'], $price, 'lock');
+        $lock_credit = $this->changeSellerCredit($data['user_id'], $price, 'lock');
 
-            if ($lock_credit->error)
-                return 'something went wrong in lock credit';
+        if ($lock_credit->error)
+            return 'something went wrong in lock credit';
 
-            $create_date = [
-                'charge_category_id' => $data['charge_category_id'],
-                'user_id' => $data['user_id'],
-                'company_id' => $data['company_id'],
-                'amount' => $this->chargeCategoryRepository->findById($data['charge_category_id'])->amount,
-                'sold_status' => 'sold',
-                'status' => 'valid',
-                'expire_date' => Carbon::now()->addDays(config('charge.expire_date_after'))
-            ];
+        $create_date = [
+            'charge_category_id' => $data['charge_category_id'],
+            'user_id'            => $data['user_id'],
+            'company_id'         => $data['company_id'],
+            'amount'             => $this->chargeCategoryRepository->findById($data['charge_category_id'])->amount,
+            'sold_status'        => 'sold',
+            'status'             => 'valid',
+            'expire_date'        => Carbon::now()->addDays(config('charge.expire_date_after')),
+        ];
 
-        $count = $data['count'];
+        $count   = $data['count'];
         $charges = [];
-        $i = 0;
+        $i       = 0;
 
         try {
             for ($i = 0; $i < $count; $i++)
@@ -89,18 +93,19 @@ class DemandCharge
         }
     }
 
-    private function getValidFreeCharge($charge_category_id) {
+    private function getValidFreeCharge ($charge_category_id)
+    {
         $charge = $this->chargeRepository->show(['*'],
-            ['charge_category_id' => $charge_category_id,
-                'status' => 'valid',
-                'sold_status' => 'free']);
+                                                ['charge_category_id' => $charge_category_id,
+                                                 'status'             => 'valid',
+                                                 'sold_status'        => 'free']);
 
         if (!$charge) {
-            $data = [
+            $data   = [
                 'charge_category_id' => $charge_category_id,
-                'amount' => $this->chargeCategoryRepository->findById($charge_category_id)->amount,
-                'sold_status' => 'free',
-                'status' => 'valid',
+                'amount'             => $this->chargeCategoryRepository->findById($charge_category_id)->amount,
+                'sold_status'        => 'free',
+                'status'             => 'valid',
             ];
             $charge = $this->createCharge($data);
         }
@@ -108,13 +113,14 @@ class DemandCharge
         return $charge;
     }
 
-    public function createCharge(&$data) {
+    public function createCharge (&$data)
+    {
         $get_code_class = App::make(CreateChargeFactoryInterface::class);
 
         //write do..while for get not unique code and produce again
         do {
             $data['code'] = $get_code_class->getChargeCode();
-            $charge = $this->chargeRepository->create($data);
+            $charge       = $this->chargeRepository->create($data);
         } while ($charge == null);
 
 

@@ -11,13 +11,14 @@ class OrderController extends Controller
 {
 
 
-    public function index(Request $request) {
+    public function index (Request $request)
+    {
         $auth_class = new Auth();
-        $token = $request->header('authorization') ?? '';
-        $user = $auth_class->getUser($token);
+        $token      = $request->header('authorization') ?? '';
+        $user       = $auth_class->getUser($token);
 
         if ($user && $user['type'] == 'admin') {
-            $data = $request->all();
+            $data     = $request->all();
             $response = Http::get(config('api_gateway.order_service_url') . 'orders', $data);
             return response()->json(json_decode($response->getBody()->getContents()));
         }
