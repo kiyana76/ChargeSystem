@@ -27,6 +27,8 @@ $app = new Laravel\Lumen\Application(
 
  $app->withEloquent();
 
+$app->configure('elasticquent');
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
