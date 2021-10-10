@@ -2,15 +2,19 @@
 
 namespace App\Classes;
 
+use App\Events\CreateOrderEvent;
+use App\Events\UpdateOrderEvent;
 use App\Repositories\Eloquent\OrderEloquentRepository;
 use App\Repositories\Eloquent\OrderItemEloquentRepository;
+use Elasticquent\ElasticquentCollectionTrait;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class Order
 {
-
+    use ElasticquentCollectionTrait;
     private $orderItemRepository;
     private $orderRepository;
 
@@ -32,6 +36,8 @@ class Order
            $order_item_data[$key]['category_id'] = $value;
            $order_item_data[$key]['order_id'] = $order->id;
            $order_items[$key] = $this->orderItemRepository->create($order_item_data[$key]);
+
+           event(new CreateOrderEvent(array_merge($order->toArray(), $order_items[$key]->toArray())));
        }
 
        return ['message' => 'order created successfully', 'body' => ['order' => $order, 'order_item' => $order_items], 'error' => false, 'status_code' => 201];
@@ -88,6 +94,7 @@ class Order
                 }
                 $this->orderItemRepository->update($orderItem->id, ['charge_id' => $charge->id]);
                 array_push($charges, $charge);
+                event(new UpdateOrderEvent(array_merge((array)$charge, ['order_id' => $order_id , 'id' => $orderItem->id, 'order_status' => $status])));
             }
         }
 
