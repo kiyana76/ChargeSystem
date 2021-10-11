@@ -34,7 +34,7 @@ class UpdateOrder {
                 $this->orderItemRepository->update($orderItem->id, ['charge_id' => $charge->id]);
                 array_push($charges, $charge);
                 if (config('elasticquent.config.status') == 'enable')
-                    event(new UpdateOrderEvent(array_merge((array)$charge, ['order_id' => $order_id, 'id' => $orderItem->id, 'order_status' => $status])));
+                    event(new UpdateOrderEvent(array_merge((array)$charge, ['order_id' => $order_id, 'order_item_id' => $orderItem->id, 'order_status' => $status])));
             } else {
                 if (config('elasticquent.config.status') == 'enable')
                     event(new UpdateOrderEvent(['order_id' => $order_id, 'id' => $orderItem->id, 'order_status' => $status]));
