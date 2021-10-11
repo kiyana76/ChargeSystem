@@ -14,8 +14,9 @@ return array(
     */
 
     'config' => [
-        'hosts'     => ['172.18.0.1:9200'],
+        'hosts'     => [env('ELASTIC_HOSTS1')],
         'retries'   => 1,
+        'status'    => env('ELASTIC_STATUS', 'disable'),
     ],
 
     /*

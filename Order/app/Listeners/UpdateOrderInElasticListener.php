@@ -17,20 +17,12 @@ class UpdateOrderInElasticListener implements ShouldQueue{
 
     public function handle (UpdateOrderEvent $event) {
         $client             = ClientBuilder::create()->setHosts(config('elasticquent.config.hosts'))->build();
-        $code               = $event->data['code'] ?? '';
-        $charge_category_id = $event->data['charge_category_id'] ?? '';
-        $status             = $event->data['status'] ?? '';
-        $sold_status        = $event->data['sold_status'] ?? '';
-        $amount             = $event->data['amount'] ?? '';
-        $expire_date        = $event->data['expire_date'] ?? '';
-        $order_status       = $event->data['order_status'];
-        $update_string      = "ctx._source['order_status'] = '$order_status';
-        ctx._source['code'] = '$code';
-        ctx._source['charge_category_id'] = '$charge_category_id';
-        ctx._source['status'] = '$status';
-        ctx._source['sold_status'] = '$sold_status';
-        ctx._source['amount'] = '$amount';
-        ctx._source['expire_date'] = '$expire_date'";
+
+        $update_string = '';
+        foreach ($event->data as $key => $value) {
+            $update_string .= "ctx._source['$key'] = '$value';";
+        }
+
         $params             = [
             'index'     => 'charges',
             'type'      => '_doc',
@@ -42,7 +34,7 @@ class UpdateOrderInElasticListener implements ShouldQueue{
                 ],
                 "query"  => [
                     "query_string" => [
-                        "query"  => $event->data['id'], //order_item
+                        "query"  => $event->data['id'], //order_item_id
                         "fields" => ["id"],
                     ],
                 ],

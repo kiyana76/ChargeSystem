@@ -27,6 +27,11 @@ class CreateOrderInElasticListener implements ShouldQueue
     public function handle(CreateOrderEvent $event)
     {
         $client = ClientBuilder::create()->setHosts(config('elasticquent.config.hosts'))->build();
+
+        // change key name status to order status
+        $event->data['order_status'] = $event->data['status'];
+        unset($event->data['status']);
+
         $params = [
             'index' => 'charges',
             'id' => $event->data['id'], //order_item_id
