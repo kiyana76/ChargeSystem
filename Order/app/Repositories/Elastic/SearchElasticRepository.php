@@ -12,23 +12,6 @@ class SearchElasticRepository implements SearchRepositoryInterface {
         $conditions         = $this->makeConditions($conditions);
         $must_condition     = $conditions['must_condition'];
         $filter_condition   = $conditions['filter_condition'];
-        $params             = [
-            'index' => config('elasticquent.default_index'),
-            'type'  => '_doc',
-            'size'  => 9000,
-            'from'  => 0,
-            'sort'  => ['order_id'],
-            'body'  => [
-                'query' => [
-                    'bool' => [
-                        'must'   => $must_condition,
-                        'filter' => $filter_condition,
-                    ],
-                ],
-            ]];
-        $client             = ClientBuilder::create()->setHosts(config('elasticquent.config.hosts'))->build();
-        $result             = $client->search($params);
-        $result             = $result['hits']['hits'];
         $order_columns      = [
             'id'          => 'order_id',
             'customer_id' => 'customer_id',
@@ -42,47 +25,32 @@ class SearchElasticRepository implements SearchRepositoryInterface {
             'category_id' => 'category_id',
             'charge_id'   => 'charge_id',
         ];
-
-        $collection = [];
-        foreach ($result as $key => $item) {
-            foreach ($item['_source'] as $elastic_key => $elastic_value) {
-                foreach ($order_columns as $order_eloquent_column => $order_elastic_column) {
-                    if ($elastic_key == $order_elastic_column) {
-                        $collection[$key][$order_eloquent_column] = $elastic_value;
-                    }
-                }
-                if (in_array("orderItem", $relations)) {
-                    foreach ($order_item_columns as $order_item_eloquent_column => $order_item_elastic_column) {
-                        if ($elastic_key == $order_item_elastic_column) {
-                            $collection[$key]['orderItem'][0][$order_item_eloquent_column] = $elastic_value;
-                        }
-                    }
-                }
-            }
-        }
-
-        // for remove duplicate order and merge order_item of order removed
-        foreach ($collection as &$datum) {
-            $count = 0;
-            foreach ($collection as $key => $value) {
-                if ($value['id'] == $datum['id']) {
-                    if ($count >= 1) {
-                        if (in_array("orderItem", $relations)) {
-                            array_push($datum['orderItem'], $value['orderItem'][0]);
-                        }
-                        unset($collection[$key]);
-                        $collection = array_values($collection);
-                    }
-                    $count++;
-                }
-            }
-        }
-        return collect($collection);
+        return $this->search($must_condition, $filter_condition, $order_columns, $order_item_columns, $relations);
     }
 
-    /*public function indexWithChargeDetails (array $columns = ['*'], array $conditions = []): ?array {
-        // TODO: Implement indexWithChargeDetails() method.
-    }*/
+    public function indexWithChargeDetails (array $columns = ['*'], array $conditions = [], array $relations = []): ?Collection {
+        $conditions         = $this->makeConditions($conditions);
+        $must_condition     = $conditions['must_condition'];
+        $filter_condition   = $conditions['filter_condition'];
+        $order_columns      = [
+            'id'          => 'order_id',
+            'customer_id' => 'customer_id',
+            'status'      => 'order_status',
+            'mobile'      => 'mobile',
+            'created_at'  => 'created_at',
+        ];
+        $order_item_columns = [
+            'id'          => 'id',
+            'order_id'    => 'order_id',
+            'category_id' => 'category_id',
+            'charge_id'   => 'charge_id',
+            'code'        => 'code',
+            'expire_date' => 'expire_date',
+            'sold_status' => 'sold_status',
+            'status'      => 'status'
+        ];
+        return $this->search($must_condition, $filter_condition, $order_columns, $order_item_columns, $relations);
+    }
 
     private function makeConditions ($conditions): array {
         $must_condition   = [];
@@ -124,5 +92,61 @@ class SearchElasticRepository implements SearchRepositoryInterface {
         }
 
         return ['must_condition' => $must_condition, 'filter_condition' => $filter_condition];
+    }
+
+    private function search($must_condition, $filter_condition, $order_columns, $order_item_columns, $relations) {
+        $collection         = [];
+        $params             = [
+            'index' => config('elasticquent.default_index'),
+            'type'  => '_doc',
+            'size'  => 9000,
+            'from'  => 0,
+            'sort'  => ['order_id'],
+            'body'  => [
+                'query' => [
+                    'bool' => [
+                        'must'   => $must_condition,
+                        'filter' => $filter_condition,
+                    ],
+                ],
+            ]];
+        $client             = ClientBuilder::create()->setHosts(config('elasticquent.config.hosts'))->build();
+        $result             = $client->search($params);
+        $result             = $result['hits']['hits'];
+
+        foreach ($result as $key => $item) {
+            foreach ($item['_source'] as $elastic_key => $elastic_value) {
+                foreach ($order_columns as $order_eloquent_column => $order_elastic_column) {
+                    if ($elastic_key == $order_elastic_column) {
+                        $collection[$key][$order_eloquent_column] = $elastic_value;
+                    }
+                }
+                if (in_array("orderItem", $relations)) {
+                    foreach ($order_item_columns as $order_item_eloquent_column => $order_item_elastic_column) {
+                        if ($elastic_key == $order_item_elastic_column) {
+                            $collection[$key]['orderItem'][0][$order_item_eloquent_column] = $elastic_value;
+                        }
+                    }
+                }
+            }
+        }
+
+        // for remove duplicate order and merge order_item of order removed
+        foreach ($collection as &$datum) {
+            $count = 0;
+            foreach ($collection as $key => $value) {
+                if ($value['id'] == $datum['id']) {
+                    if ($count >= 1) {
+                        if (in_array("orderItem", $relations)) {
+                            array_push($datum['orderItem'], $value['orderItem'][0]);
+                        }
+                        unset($collection[$key]);
+                        $collection = array_values($collection);
+                    }
+                    $count++;
+                }
+            }
+        }
+        return collect($collection);
     }
 }

@@ -27,7 +27,7 @@ class SearchEloquentRepository implements SearchRepositoryInterface {
         return $order_class->where($conditions)->with($relations)->get();
     }
 
-    public function indexWithChargeDetails (array $columns = ['*'], array $conditions = [] , array $relations = []): ?array {
+    public function indexWithChargeDetails (array $columns = ['*'], array $conditions = [] , array $relations = []): ?Collection {
         $order_filters    = $conditions['order_filters'];
         $charge_filters   = $conditions['charge_filters'];
         $orders           = $this->index(['*'], $order_filters, ['orderItem']);
@@ -68,6 +68,6 @@ class SearchEloquentRepository implements SearchRepositoryInterface {
                 }
             }
         }
-        return $result_array;
+        return collect($result_array);
     }
 }
