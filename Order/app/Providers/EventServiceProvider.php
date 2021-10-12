@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\CreateOrderEvent;
+use App\Events\UpdateOrderEvent;
+use App\Listeners\CreateOrderInElasticListener;
+use App\Listeners\UpdateOrderInElasticListener;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -12,8 +16,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        \App\Events\ExampleEvent::class => [
-            \App\Listeners\ExampleListener::class,
+        CreateOrderEvent::class => [
+            CreateOrderInElasticListener::class
+        ],
+        UpdateOrderEvent::class => [
+            UpdateOrderInElasticListener::class
         ],
     ];
 }

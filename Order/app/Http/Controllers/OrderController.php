@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Order;
+use App\Classes\CreateOrder;
+use App\Classes\IndexOrder;
+use App\Classes\UpdateOrder;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -22,7 +24,7 @@ class OrderController extends Controller
         ];
 
         $data = $request->only($items);
-        $order_class = new Order();
+        $order_class = new CreateOrder();
         $result = $order_class->create($data);
         $order_id = $result['body']['order']->id;
         $amount = $order_class->getAmountOrder($order_id);
@@ -33,7 +35,7 @@ class OrderController extends Controller
     }
 
     public function index(Request $request) {
-        $order_class = new Order();
+        $order_class = new IndexOrder();
         $filters = $request->all();
 
         foreach ($filters as $key => $value) {
@@ -47,7 +49,7 @@ class OrderController extends Controller
     }
 
     public function indexWithChargeDetails(Request $request) {
-        $order_class = new Order();
+        $order_class = new IndexOrder();
         $order_items = [
             'mobile',
             'status',
@@ -80,7 +82,7 @@ class OrderController extends Controller
 
     public function update(Request $request) {
         $data = $request->all();
-        $order_class = new Order();
+        $order_class = new UpdateOrder();
         $order_id = $data['body']['order_id'];
         $status  = $data['body']['status'];
         $message = $data['body']['message'];

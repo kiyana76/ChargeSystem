@@ -23,7 +23,7 @@ class ChargeController extends Controller
         $user = $auth_class->getUser($token);
 
         if ($user) {
-            $data['mobile'] = $user['mobile']; // we doun't store user_id for customer in charge service
+            $data['mobile'] = $user['mobile']; // we don't store user_id for customer in charge service
             $query_params = http_build_query($data);
             $response = Http::get(config('api_gateway.order_service_url') . 'orders/charge-details?' . $query_params);
             $json_response = json_decode($response->getBody()->getContents());
