@@ -1,0 +1,1854 @@
+{
+	"info": {
+		"_postman_id": "9fcd4b04-994c-4223-a1d6-1e1796df7c10",
+		"name": "Charge System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User API Gateway",
+			"item": [
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Charge",
+							"item": [
+								{
+									"name": "Category",
+									"item": [
+										{
+											"name": "Index",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{UserApiUrl}}/charge-categories",
+													"host": [
+														"{{UserApiUrl}}"
+													],
+													"path": [
+														"charge-categories"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Demand Charge",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "charge_category_id",
+													"value": "3",
+													"type": "text"
+												},
+												{
+													"key": "count",
+													"value": "1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{UserApiUrl}}/charge/demand",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"charge",
+												"demand"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/charge?user_id=&charge_category_id=&expire_date_from=&expire_date_to=&sold_status=&status=&created_at",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"charge"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": ""
+												},
+												{
+													"key": "charge_category_id",
+													"value": ""
+												},
+												{
+													"key": "expire_date_from",
+													"value": ""
+												},
+												{
+													"key": "expire_date_to",
+													"value": ""
+												},
+												{
+													"key": "sold_status",
+													"value": ""
+												},
+												{
+													"key": "status",
+													"value": ""
+												},
+												{
+													"key": "created_at",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Order",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/orders?mobile=09302828628&status=success&date_to=&date_from",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"orders"
+											],
+											"query": [
+												{
+													"key": "mobile",
+													"value": "09302828628"
+												},
+												{
+													"key": "status",
+													"value": "success"
+												},
+												{
+													"key": "date_to",
+													"value": ""
+												},
+												{
+													"key": "date_from",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Transaction",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{Url}}/transactions?ref_number&order_id&mobile",
+											"host": [
+												"{{Url}}"
+											],
+											"path": [
+												"transactions"
+											],
+											"query": [
+												{
+													"key": "ref_number",
+													"value": null
+												},
+												{
+													"key": "order_id",
+													"value": null
+												},
+												{
+													"key": "mobile",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Credit",
+							"item": [
+								{
+									"name": "Log",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenSellerForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/credit/log?company_id=&seller_id=",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"credit",
+												"log"
+											],
+											"query": [
+												{
+													"key": "company_id",
+													"value": ""
+												},
+												{
+													"key": "seller_id",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "user_id",
+													"value": "7",
+													"type": "text"
+												},
+												{
+													"key": "amount",
+													"value": "150000",
+													"type": "text"
+												},
+												{
+													"key": "type",
+													"value": "increase",
+													"type": "text"
+												},
+												{
+													"key": "admin_id",
+													"value": "6",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{UserApiUrl}}/credit",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"credit"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Credit",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/get-credit?user_id=10",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"get-credit"
+											],
+											"query": [
+												{
+													"key": "user_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Company",
+							"item": [
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "asaaaaaa",
+													"type": "text"
+												},
+												{
+													"key": "credit",
+													"value": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{UserApiUrl}}/companies",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"companies"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "index",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenAdminForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/companies",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"companies"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenAdminForUserService}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "kiyana seller",
+											"type": "text"
+										},
+										{
+											"key": "mobile",
+											"value": "09304645477",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "kiyana@email.com",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"type": "text"
+										},
+										{
+											"key": "company_id",
+											"value": "8",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "seller",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserApiUrl}}/register/user",
+									"host": [
+										"{{UserApiUrl}}"
+									],
+									"path": [
+										"register",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "mobile",
+											"value": "09302828629",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserApiUrl}}/login",
+									"host": [
+										"{{UserApiUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Seller",
+					"item": [
+						{
+							"name": "Credit",
+							"item": [
+								{
+									"name": "Log",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenSellerForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/credit/log",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"credit",
+												"log"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Credit",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenSellerForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/get-credit",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"get-credit"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Charge",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenSellerForUserService}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{UserApiUrl}}/charge?seller_id=&charge_category_id=&expire_date_from=&expire_date_to=&sold_status=&status=",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"charge"
+											],
+											"query": [
+												{
+													"key": "seller_id",
+													"value": ""
+												},
+												{
+													"key": "charge_category_id",
+													"value": ""
+												},
+												{
+													"key": "expire_date_from",
+													"value": ""
+												},
+												{
+													"key": "expire_date_to",
+													"value": ""
+												},
+												{
+													"key": "sold_status",
+													"value": ""
+												},
+												{
+													"key": "status",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Demand Charge",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{AuthTokenSellerForUserService}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "charge_category_id",
+													"value": "3",
+													"type": "text"
+												},
+												{
+													"key": "count",
+													"value": "1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{UserApiUrl}}/charge/demand",
+											"host": [
+												"{{UserApiUrl}}"
+											],
+											"path": [
+												"charge",
+												"demand"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Burnt Charge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mobile",
+									"value": "09302828629",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "421808fa-1ddd-11ec-b1ea-0b1fbc1cb848",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{UserApiUrl}}/charge/burnt",
+							"host": [
+								"{{UserApiUrl}}"
+							],
+							"path": [
+								"charge",
+								"burnt"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer Api Gateway",
+			"item": [
+				{
+					"name": "Transaction",
+					"item": [
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenCustomerForUserService}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{CustomerApiUrl}}/transactions?status=created",
+									"host": [
+										"{{CustomerApiUrl}}"
+									],
+									"path": [
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "ref_number",
+											"value": "12345678",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "created"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Pay",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "order_id",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Url}}/transactions/pay",
+									"host": [
+										"{{Url}}"
+									],
+									"path": [
+										"transactions",
+										"pay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenCustomerForUserService}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "charge_category_id[0]",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "charge_category_id[1]",
+											"value": "3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{CustomerApiUrl}}/orders",
+									"host": [
+										"{{CustomerApiUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenCustomerForUserService}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{CustomerApiUrl}}/orders?mobile=09302828628&status=success&date_to=&date_from=",
+									"host": [
+										"{{CustomerApiUrl}}"
+									],
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "mobile",
+											"value": "09302828628"
+										},
+										{
+											"key": "status",
+											"value": "success"
+										},
+										{
+											"key": "date_to",
+											"value": ""
+										},
+										{
+											"key": "date_from",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Charge",
+					"item": [
+						{
+							"name": "Category",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{CustomerApiUrl}}/charge-categories",
+											"host": [
+												"{{CustomerApiUrl}}"
+											],
+											"path": [
+												"charge-categories"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenCustomerForUserService}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{CustomerApiUrl}}/charge?category_id=3&expire_date_from=&expire_date_to=&sold_status=burnt",
+									"host": [
+										"{{CustomerApiUrl}}"
+									],
+									"path": [
+										"charge"
+									],
+									"query": [
+										{
+											"key": "category_id",
+											"value": "3"
+										},
+										{
+											"key": "expire_date_from",
+											"value": ""
+										},
+										{
+											"key": "expire_date_to",
+											"value": ""
+										},
+										{
+											"key": "sold_status",
+											"value": "burnt"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Burnt Charge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mobile",
+									"value": "09194693898",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "d8929f2c-2353-11ec-ac18-99b3d3cd9477",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{CustomerApiUrl}}/charge/burnt",
+							"host": [
+								"{{CustomerApiUrl}}"
+							],
+							"path": [
+								"charge",
+								"burnt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mobile",
+									"value": "09302828629",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{CustomerApiUrl}}/login",
+							"host": [
+								"{{CustomerApiUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Charge",
+			"item": [
+				{
+					"name": "Category",
+					"item": [
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Url}}/charge-categories",
+									"host": [
+										"{{Url}}"
+									],
+									"path": [
+										"charge-categories"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User Service",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Admin login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "mobile",
+											"value": "09302828629",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/admin/login",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Customer login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "mobile",
+											"value": "09302828629",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/customer/login",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"customer",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenAdminForUserService}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "kiyana seller",
+											"type": "text"
+										},
+										{
+											"key": "mobile",
+											"value": "09302828628",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "kiyana@email.com",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"type": "text"
+										},
+										{
+											"key": "company_id",
+											"value": "7",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "seller",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/register/user",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"register",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Show User",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{UserUrl}}/user/7",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"user",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenAdminForUserService}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{UserUrl}}/get-user",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"get-user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Customer",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{UserUrl}}/get-customer",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"get-customer"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Company",
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenAdminForUserService}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "bar faraz aseman",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/companies",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{AuthTokenAdminForUserService}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{UserUrl}}/companies",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Credit",
+					"item": [
+						{
+							"name": "Log",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{UserUrl}}/credit/log?company_id=&seller_id=",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"credit",
+										"log"
+									],
+									"query": [
+										{
+											"key": "company_id",
+											"value": ""
+										},
+										{
+											"key": "seller_id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Credit",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{UserUrl}}/get-credit?user_id=7",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"get-credit"
+									],
+									"query": [
+										{
+											"key": "user_id",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "user_id",
+											"value": "7",
+											"type": "text"
+										},
+										{
+											"key": "amount",
+											"value": "50000",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "increase",
+											"type": "text"
+										},
+										{
+											"key": "admin_id",
+											"value": "6",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/credit",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"credit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "type",
+											"value": "decrease",
+											"type": "text"
+										},
+										{
+											"key": "credit_log_id",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UserUrl}}/credit",
+									"host": [
+										"{{UserUrl}}"
+									],
+									"path": [
+										"credit"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Charge Service",
+			"item": [
+				{
+					"name": "Category",
+					"item": [
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ChargeUrl}}/charge-categories",
+									"host": [
+										"{{ChargeUrl}}"
+									],
+									"path": [
+										"charge-categories"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Demand Charge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "charge_category_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "count",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "user_type",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "company_id",
+									"value": "6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{ChargeUrl}}/charge/demand",
+							"host": [
+								"{{ChargeUrl}}"
+							],
+							"path": [
+								"charge",
+								"demand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ChargeUrl}}/charge?user_id=7&charge_category_id=&expire_date_from=&expire_date_to=&sold_status=&status=&created_at",
+							"host": [
+								"{{ChargeUrl}}"
+							],
+							"path": [
+								"charge"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "7"
+								},
+								{
+									"key": "charge_category_id",
+									"value": ""
+								},
+								{
+									"key": "expire_date_from",
+									"value": ""
+								},
+								{
+									"key": "expire_date_to",
+									"value": ""
+								},
+								{
+									"key": "sold_status",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "created_at",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Burnt Charge",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "mobile",
+									"value": "09302828629",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "4558e714-1ddd-11ec-9345-83e01bb3d513",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{ChargeUrl}}/charge/burnt",
+							"host": [
+								"{{ChargeUrl}}"
+							],
+							"path": [
+								"charge",
+								"burnt"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction Service",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}/transactions?ref_number",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "ref_number",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "order_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "10000",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "09302828629",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{TransactionUrl}}/payment_test",
+							"host": [
+								"{{TransactionUrl}}"
+							],
+							"path": [
+								"payment_test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Service",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OrderUrl}}/orders?mobile=09302828629&status=&date_to=2021-10-11&date_from=2021-10-10",
+							"host": [
+								"{{OrderUrl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "mobile",
+									"value": "09302828629"
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "date_to",
+									"value": "2021-10-11"
+								},
+								{
+									"key": "date_from",
+									"value": "2021-10-10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthTokenCustomerForUserService}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "charge_category_id[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "09302828628",
+									"type": "text"
+								},
+								{
+									"key": "customer_id",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "charge_category_id[1]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "charge_category_id[2]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "charge_category_id[3]",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{OrderUrl}}/orders",
+							"host": [
+								"{{OrderUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "index with charge details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OrderUrl}}/orders/charge-details?status=&date_to=&date_from=&mobile=&expire_date_from=&expire_date_to=&sold_status=&category_id=",
+							"host": [
+								"{{OrderUrl}}"
+							],
+							"path": [
+								"orders",
+								"charge-details"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "date_to",
+									"value": ""
+								},
+								{
+									"key": "date_from",
+									"value": ""
+								},
+								{
+									"key": "mobile",
+									"value": ""
+								},
+								{
+									"key": "expire_date_from",
+									"value": ""
+								},
+								{
+									"key": "expire_date_to",
+									"value": ""
+								},
+								{
+									"key": "sold_status",
+									"value": ""
+								},
+								{
+									"key": "category_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "body[order_id]",
+									"value": "201",
+									"type": "text"
+								},
+								{
+									"key": "body[status]",
+									"value": "success",
+									"type": "text"
+								},
+								{
+									"key": "body[message]",
+									"value": "successfully",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{OrderUrl}}/orders",
+							"host": [
+								"{{OrderUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "UserUrl",
+			"value": ""
+		},
+		{
+			"key": "CustomerApiUrl",
+			"value": ""
+		},
+		{
+			"key": "Url",
+			"value": ""
+		},
+		{
+			"key": "UserApiUrl",
+			"value": ""
+		},
+		{
+			"key": "TransactionUrl",
+			"value": ""
+		},
+		{
+			"key": "OrderUrl",
+			"value": ""
+		}
+	]
+}
